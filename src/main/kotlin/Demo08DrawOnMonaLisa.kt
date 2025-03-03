@@ -28,8 +28,7 @@ import org.openrndr.math.Vector2
 var circlesToDraw = emptyList<Circle>()
 
 // Downloaded from Wikipedia
-private const val monaLisaPath =
-  "data/images/Leonardo_da_Vinci_-_Mona_Lisa_(Louvre,_Paris)FXD.jpg"
+private const val monaLisaPath = "data/workshop/mona-lisa.jpeg"
 
 fun main() = application {
 
@@ -40,7 +39,7 @@ fun main() = application {
 
     program {
 
-        val schoolImage = loadImage(monaLisaPath)
+        val monaLisaImage = loadImage(monaLisaPath)
 
         val myTools = listOf(
             Tool<DrawCircles> {
@@ -72,7 +71,7 @@ fun main() = application {
             }
         }
         extend {
-            drawer.image(schoolImage, 0.0, 0.0, width.toDouble(), height.toDouble())
+            drawer.image(monaLisaImage, 0.0, 0.0, width.toDouble(), height.toDouble())
             circlesToDraw.forEach { circle ->
                 drawer.apply {
                     stroke = circle.color

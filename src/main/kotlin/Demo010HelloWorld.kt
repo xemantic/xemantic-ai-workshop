@@ -17,6 +17,7 @@ import kotlinx.coroutines.runBlocking
  *
  * - AI: sending a message to Anthropic API and receiving a response
  * - Kotlin: handling suspended calls in Kotlin `main` function with `runBlocking`
+ * - Kotlin: DSL with operator overloading
  * - SDK: using
  */
 fun main() {
@@ -33,7 +34,18 @@ fun main() {
 
 /*
   Note: anthropic.messages.create is a suspended function.
-  We can only run it in a coroutine scope and runBlocking is one of the ways to do it.
+  We can only run it in a coroutine scope and runBlocking
+  is one of the ways to do it.
 
-  Note: we are using overloaded `unaryPlus` operator to
+  Note: we are using overloaded `unaryPlus` operator to add
+  a message to the request and the content to the message
+  alternatively we would have to write:
+
+    messages = listOf(Message {
+        content.add(Text("foo"))
+    })
+
+  Note: the received response contains much more details
+  and nested contend. For convenience we are accessing
+  extension property named `text`.
 */

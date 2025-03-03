@@ -20,9 +20,23 @@ import kotlinx.serialization.Serializable
 import javax.sound.midi.MidiChannel
 import javax.sound.midi.MidiSystem
 
+@SerialName("PlayMusic")
+@Description("Plays the music on the local MIDI device")
+data class PlayMusic(val notes: List<Note>)
+
+@Serializable
+@SerialName("note")
+data class Note(
+    val midiKey: Int,
+    @Description("Note start time in milliseconds")
+    val startTime: Long,
+    @Description("Note duration in milliseconds")
+    val duration: Long
+)
+
 fun main() {
+    val synthesizer = getSynthesizer()
     runBlocking {
-        val synthesizer = getSynthesizer()
         val playMusicTool = Tool<PlayMusic> {
             notes.forEach { note ->
                 launch {
@@ -45,20 +59,6 @@ fun main() {
         response.toolUse!!.use()
     }
 }
-
-@SerialName("PlayMusic")
-@Description("Plays the music on the local MIDI device")
-data class PlayMusic(val notes: List<Note>)
-
-@Serializable
-@SerialName("note")
-data class Note(
-    val midiKey: Int,
-    @Description("Note start time in milliseconds")
-    val startTime: Long,
-    @Description("Note duration in milliseconds")
-    val duration: Long
-)
 
 fun getSynthesizer(): MidiChannel = MidiSystem.getSynthesizer().run {
     open()

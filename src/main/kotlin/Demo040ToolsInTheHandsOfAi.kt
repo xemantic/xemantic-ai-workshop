@@ -9,33 +9,64 @@
 package com.xemantic.ai.workshop
 
 import com.xemantic.ai.anthropic.Anthropic
-import com.xemantic.ai.anthropic.content.ToolUse
 import com.xemantic.ai.anthropic.message.Message
+import com.xemantic.ai.anthropic.message.plusAssign
 import com.xemantic.ai.anthropic.tool.Tool
 import com.xemantic.ai.tool.schema.meta.Description
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.SerialName
 
-fun main2() = runBlocking {
-  val client = Anthropic {
-    Tool<FibonacciTool> {
-      fibonacci(n)
-    }
-  }
-  val response = client.messages.create {
-    +Message { +"What's Fibonacci number 42" }
-  }
-  val toolUse = response.content.filterIsInstance<ToolUse>().first()
-  val toolResult = toolUse.use()
-  //println(toolResult)
-}
-
+// first we define a standard Kotlin function
+// look how beautiful tail recursion is in Kotlin!
 tailrec fun fibonacci(
-  n: Int, a: Int = 0, b: Int = 1
+    n: Int, a: Int = 0, b: Int = 1
 ): Int = when (n) {
-  0 -> a; 1 -> b; else -> fibonacci(n - 1, b, a + b)
+    0 -> a
+    1 -> b
+    else -> fibonacci(n - 1, b, a + b)
 }
 
+// then we define the class carrying the tool
+// input, in this case just one attribute named n
+// this is the data LLM will send us as structured JSON
 @SerialName("Fibonacci")
 @Description("Calculates Fibonacci number n")
 data class FibonacciTool(val n: Int)
+
+/**
+ * What you will learn?
+ *
+ * - AI: tools as a basis for agentic use cases
+ * - AI: how to define a tool input and seamlessly connect it
+ *   with Kotlin logic
+ * - Cognitive Science: LLM suck at math,
+ *   do math with calculator, not with stochastic entropy
+ * - Kotlin: serialization offers compile time class metadata
+ */
+fun main() = runBlocking {
+    val tool = Tool<FibonacciTool> {
+        fibonacci(n)
+    }
+    val myTools = listOf(tool)
+    val conversation = mutableListOf<Message>()
+    conversation += Message { +"What's Fibonacci number 42" }
+    val anthropic = Anthropic()
+    val toolUseResponse = anthropic.messages.create {
+        messages = conversation
+        tools = myTools
+    }
+    println("Stop reason: ${toolUseResponse.stopReason}")
+    println(toolUseResponse.text)
+    conversation += toolUseResponse
+    conversation += toolUseResponse.useTools()
+    val finalResponse = anthropic.messages.create {
+        messages = conversation
+        tools = myTools
+    }
+    println(finalResponse.text)
+}
+
+
+/*
+  Note: @Description annotation implies @Serializable
+ */

@@ -16,12 +16,13 @@ import kotlinx.coroutines.runBlocking
 /**
  * What you will learn?
  *
- * - AI: conducting variable length conversation with LLM
- * - Kotlin: operator overloading for
+ * - AI: conducting variable length conversations with the LLM
+ *   requires cumulating dialog in the context window
+ * - Cognitive Science: the theory of mind and metacognition
+ * - Kotlin: operator overloading for adding messages and content
  */
 fun main() = runBlocking {
     val anthropic = Anthropic()
-    // we will be collecting
     val conversation = mutableListOf<Message>()
     conversation += Message {
         +"Is it true, that to know we can die is to be dead already?"
@@ -29,6 +30,7 @@ fun main() = runBlocking {
     val response1 = anthropic.messages.create {
         messages = conversation
     }
+    println("Response 1:")
     println(response1.text)
     conversation += response1
     conversation += Message {
@@ -37,9 +39,17 @@ fun main() = runBlocking {
     val response2 = anthropic.messages.create {
         messages = conversation
     }
+    println("Response 2:")
     println(response2.text)
     conversation += response2
 
-    println("The whole past conversation is included in the token window")
+    println("The whole past conversation is included in the token window:")
     println(conversation)
 }
+
+/*
+  Note: we are overloading `plusAssign` operator to add message
+  and the response content to the conversation.
+
+  Discuss theory of mind and metacognition
+ */
