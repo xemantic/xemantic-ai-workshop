@@ -1,4 +1,11 @@
-# OPENRNDR template project
+# xemantic-ai-workshop
+
+> [!NOTE]
+> This project is based on the [openrndr-template](https://github.com/openrndr/openrndr-template) projects, to bring all the goodies of the OPENRNDR creative coding framework to Agentic AI projects. Please refer to [OPENRNDR](https://openrndr.org/) documentation regarding this part.
+
+## This repository
+
+https://github.com/xemantic/xemantic-ai-workshop
 
 A feature rich template for creating OPENRNDR programs based on [Gradle/Kts](https://en.wikipedia.org/wiki/Gradle).
 
