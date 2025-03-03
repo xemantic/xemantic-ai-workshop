@@ -134,6 +134,9 @@ dependencies {
     }
     implementation(kotlin("stdlib-jdk8"))
     testImplementation(libs.junit)
+
+    implementation(libs.anthropic.sdk.kotlin)
+    implementation(libs.ktor.client.java)
 }
 
 // ------------------------------------------------------------------------------------------------------------------ //
