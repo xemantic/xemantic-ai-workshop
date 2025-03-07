@@ -21,8 +21,8 @@ import kotlinx.coroutines.runBlocking
  *
  * What you will learn?
  *
- * - AI: the use of system prompts for conditioning the conversation.
- * - Cognitive Science: conditioning AI's behaviour comes from role-playing.
+ * - AI: the use of system prompts for conditioning the conversation
+ * - Cognitive Science: conditioning AI's behaviour comes from role-playing
  * - Kotlin: multiline strings come handy for prompts
  */
 fun main() {

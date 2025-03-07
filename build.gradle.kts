@@ -115,6 +115,10 @@ dependencies {
 //    implementation(libs.gson)
 //    implementation(libs.csv)
 
+    constraints {
+        implementation(libs.kotlin.reflect)
+    }
+
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.slf4j.api)
     implementation(libs.kotlin.logging)
@@ -308,7 +312,16 @@ class Openrndr {
             }
             if ("orx-tensorflow" in orxFeatures) runtimeOnly("org.openrndr.extra:$orxTensorflowBackend-natives-$os:$orxVersion")
             if ("orx-kinect-v1" in orxFeatures) runtimeOnly(orxNatives("orx-kinect-v1"))
-            if ("orx-olive" in orxFeatures) implementation(libs.kotlin.script.runtime)
+            if ("orx-olive" in orxFeatures) {
+                implementation(libs.kotlin.script.runtime)
+                implementation(libs.kotlin.scripting.jvm.host)
+                implementation(libs.kotlin.scripting.common)
+                implementation(libs.kotlin.scripting.jvm)
+                implementation(libs.kotlin.scripting.jsr223)
+                implementation(libs.kotlin.scripting.dependencies)
+                implementation(libs.kotlin.scripting.dependencies.maven)
+                implementation(libs.kotlin.compiler.embeddable)
+            }
         }
     }
 }
