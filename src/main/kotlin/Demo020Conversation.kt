@@ -45,6 +45,7 @@ fun main() = runBlocking {
 
     println("The whole past conversation is included in the token window:")
     println(conversation)
+    println(response2)
 }
 
 /*

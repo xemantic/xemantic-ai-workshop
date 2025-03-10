@@ -12,7 +12,6 @@ import com.xemantic.ai.anthropic.Anthropic
 import com.xemantic.ai.anthropic.content.Image
 import com.xemantic.ai.anthropic.message.Message
 import com.xemantic.ai.anthropic.tool.Tool
-import com.xemantic.ai.anthropic.tool.ToolChoice
 import com.xemantic.ai.tool.schema.meta.Description
 import kotlinx.coroutines.*
 import kotlinx.serialization.SerialName
@@ -50,13 +49,14 @@ fun main() {
         val anthropic = Anthropic()
         val response = anthropic.messages.create {
             +Message {
-                +"Can you play the music from the attached picture?"
-                +Image("data/workshop/happy-birthday-chords-two-hands.webp")
+                +Image("data/workshop/mona-lisa.jpeg")
+                +"Please interpret this image as music and explain why you chose particular notes."
             }
             tools += playMusicTool
-            toolChoice = ToolChoice.Tool<PlayMusic>()
+//            toolChoice = ToolChoice.Tool<PlayMusic>()
         }
         response.toolUse!!.use()
+        println(response.text)
     }
 }
 

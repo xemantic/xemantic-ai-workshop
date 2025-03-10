@@ -18,8 +18,32 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import org.openrndr.application
 import org.openrndr.color.ColorRGBa
+import org.openrndr.draw.Drawer
 import org.openrndr.launch
 import org.openrndr.math.Vector2
+
+@SerialName("DrawLines")
+@Description("Draws lines specified in the lines list")
+data class DrawLines(
+    val lines: List<Line>
+)
+
+@Serializable
+@SerialName("line")
+data class Line(
+    val color: ColorRGBa,
+    val thickness: Double,
+    val start: Vector2,
+    val end: Vector2
+)
+
+fun Line.draw(drawer: Drawer) {
+    drawer.apply {
+        stroke = color
+        strokeWeight = thickness
+        lineSegment(start, end)
+    }
+}
 
 var linesToDraw = emptyList<Line>()
 
@@ -36,19 +60,15 @@ fun main() = application {
             linesToDraw = lines
             "line drawn"
         }
-        val systemPrompt =
-            "You can draw on a canvas visible to the human. Current resolution: ${width}x${height}, the background is black"
+        val systemPrompt = """
+            You can draw on the canvas visible to the human.
+            
+            Current resolution: ${width}x${height}
+            Background: black
+        """.trimIndent()
         val anthropic = Anthropic()
 
-        launch(Dispatchers.IO) {
-            val response = anthropic.messages.create {
-                system(systemPrompt)
-                +Message { +"Draw a car" }
-                toolChoice = ToolChoice.Tool<DrawLines>()
-                tools += tool
-            }
-            response.useTools()
-        }
+
 
         extend {
             linesToDraw.forEach { line ->
@@ -57,21 +77,16 @@ fun main() = application {
                 drawer.lineSegment(line.start, line.end)
             }
         }
+
+        launch(Dispatchers.IO) {
+            val response = anthropic.messages.create {
+                system(systemPrompt)
+                +Message { +"Draw mona lisa" }
+                toolChoice = ToolChoice.Tool<DrawLines>()
+                tools += tool
+            }
+            response.useTools()
+        }
     }
 
 }
-
-@SerialName("DrawLines")
-@Description("Draws lines specified in the lines list")
-data class DrawLines(
-    val lines: List<Line>
-)
-
-@Serializable
-@SerialName("line")
-data class Line(
-    val color: ColorRGBa,
-    val thickness: Double,
-    val start: Vector2,
-    val end: Vector2
-)

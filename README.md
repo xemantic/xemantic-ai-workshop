@@ -1,72 +1,60 @@
 # xemantic-ai-workshop
 
-> [!NOTE]
-> This project is based on the [openrndr-template](https://github.com/openrndr/openrndr-template) projects, to bring all the goodies of the OPENRNDR creative coding framework to Agentic AI projects. Please refer to [OPENRNDR](https://openrndr.org/) documentation regarding this part.
+_This is a private GitHub repository accessible only to attendees of the [Agentic AI & Creative Coding workshops](https://xemantic.com/ai/workshops)._
 
-## This repository
-
+Workshop Repository URL:
 https://github.com/xemantic/xemantic-ai-workshop
 
-A feature rich template for creating OPENRNDR programs based on [Gradle/Kts](https://en.wikipedia.org/wiki/Gradle).
 
-The template consists of a configuration for Gradle and two example OPENRNDR programs. The Gradle configuration should serve as the
-go-to starting point for writing OPENRNDR-based software.
 
-If you are looking at this from IntelliJ IDEA you can start by expanding the _project_ tab on the left. You will find a template program in `src/main/kotlin/TemplateProgram.kt` and a live-coding example in `src/main/kotlin/TemplateLiveProgram.kt`.
+> [!NOTE]
+> This project is based on the [openrndr-template](https://github.com/openrndr/openrndr-template) projects, to bring all the goodies of the [OPENRNDR](https://openrndr.org/) creative coding framework to Agentic AI projects. Please refer to [OPENRNDR](https://openrndr.org/) documentation regarding this part.
 
-You will find some [basic instructions](https://guide.openrndr.org/setUpYourFirstProgram.html) in the [OPENRNDR guide](https://guide.openrndr.org)
+## What do I need to start?
 
-## Gradle tasks
+### Integrated Development Environment (IDE) for Kotlin
 
- - `./gradlew run` runs the TemplateProgram (Use `gradlew.bat run` under Windows)
- - `./gradlew shadowJar` creates an executable platform specific jar file with all dependencies. Run the resulting program by typing `java -jar build/libs/openrndr-template-1.0.0-all.jar` in a terminal from the project root. If your project contains multiple `main` methods, specify which one to run with `java -cp build/libs/openrndr-template-1.0.0-all.jar MyProgramKt`, where `MyProgramKt` can also be `foo.bar.MyProgramKt` if it's in the package `foo.bar`.
- - `./gradlew jpackageZip` creates a zip with a stand-alone executable for the current platform (works with Java 14 only)
+You need to have either [IntelliJ IDEA]() or [Android Studio]() installed on your computer. In case of the IntelliJ IDEA the open source community edition (CE) is good enough.
 
-## Cross builds
+> [!NOTE]
+> IntelliJ, and Android Studio derived from it, are Integrated Development Environments (IDE) allowing to conveniently edit and execute Kotlin code. Kotlin is the language used in all the code demonstrations in this repository.
 
-To create a runnable jar for a platform different from your current platform, use `./gradlew jar -PtargetPlatform=<platform>`, where `<platform>` is either `windows`, `macos`, `linux-x64`, or `linux-arm64`. 
+### Cloning workshop repository from GitHub
 
-## Updating OPENRNDR, ORX and other dependencies
+> [!TIP]
+> If you've never configured GitHub access before on your computer, then GitHub Desktop will be probably the easiest way to start
 
-The openrndr-template depends on various packages including the core [openrndr](https://github.com/openrndr/openrndr/) and the [orx](https://github.com/openrndr/orx/) extensions. The version numbers of these dependencies are specified in your [libs.versions.toml](gradle/libs.versions.toml) file. Learn more about this file in the [Gradle documentation](https://docs.gradle.org/current/userguide/platforms.html#sub:conventional-dependencies-toml) website.
+https://github.com/apps/desktop
 
-Newer versions of OPENRNDR and ORX bring useful features and bug fixes. The most recent versions are
-<br>![openrndr version](https://maven-badges.herokuapp.com/maven-central/org.openrndr/openrndr-application/badge.svg) for OPENRNDR. 
-<br>![orx version](https://maven-badges.herokuapp.com/maven-central/org.openrndr.extra/orx-parameters-jvm/badge.svg) for ORX.
+## Learning material
 
-Switch to the [next-version branch](https://github.com/openrndr/openrndr-template/tree/next-version) or enter these versions manually in your toml file. They can look like "0.4.3" or "0.4.3-alpha4". Use the complete string, as in:
+### Demonstrations based on the source code
 
-    openrndr = "0.4.3-alpha4"
-        orx = "0.4.3-alpha4"
+This project demonstrates several use cases of calling Anthropic API, while gradually  introducing more complex techniques and concepts.
 
-You can add other dependencies needed by your project to your [build.gradle.kts](build.gradle.kts) file, inside the `dependencies { }` block. 
+In the [src/main/kotlin](src/main/kotlin) folder you will find these demo programs sorted by growing numbers, starting from [Demo010HelloWorld.kt](src/main/kotlin/Demo010HelloWorld.kt).
 
-⚠️ Remember to reload the Gradle configuration after changing any dependencies.
+### Categories of acquired knowledge
 
-## Run other Kotlin programs from the command line
+Each `Demo` is annotated with "What you will learn" comments, and the knowledge to be acquired in each step is split into 3 categories:
 
-By default `./gradlew run` runs a program called `TemplateProgram.kt` but a different one can be provided as an argument:
+- **AI Development**: particular techniques of programming against LLM systems 
+- **Cognitive Science**: the psychological and philosophical foundation of a technique
+- **Kotlin**: particular Kotlin idioms used in the source code
 
-To run `src/main/kotlin/myProgram.kt`
+Each category will be expanded and discussed during the workshop.
 
-    ./gradlew run -Popenrndr.application=MyProgramKt
+> [!NOTE]
+> While the _Kotlin_ category is practical, the _AI Development_ and _Cognitive Science_ categories are theoretical, and easily applicable in other environments and frameworks. They provide the meta-theory of building powerful agentic AI systems. 
 
-To run `src/main/kotlin/foo/bar/myProgram.kt` (assuming `package foo.bar` in myProgram.kt)
+### A glossary of AI-related terms
 
-    ./gradlew run -Popenrndr.application=foo.bar.MyProgramKt
+Navigating through Agentic AI development requires particular vocabulary, and this project also comes with [a glossary of AI-related terms](ai_glossary.md).
 
-## Github Actions
+## Kotlin crash course (optional)
 
-This repository contains various Github Actions under `./github/workflows`:
+If you are not familiar with Kotlin, the first hour of the workshop is devoted to kotlin crash course. Follow materials in the [src/main/kotlin/intro](src/main/kotlin/intro) folder, starting with [Kotlin010HelloWorld.kt](src/main/kotlin/intro/Kotlin010HelloWorld.kt)
 
-- [build-on-commit.yaml](.github/workflows/build-on-commit.yaml) runs a basic build on every commit, 
-which can help detect issues in the source code.
+## OPENRNDR examples
 
-- [publish-binaries.yaml](.github/workflows/publish-binaries.yaml) publishes binaries for Linux, Mac and Windows 
-any time a commit is tagged with a version number like `v1.*`. For example, we can create and push a tag with these git commands:
-    ```
-    git tag -a v1.0.0 -m "v1.0.0"
-    git push origin v1.0.0
-    ```
-
-    You can follow the progress of the action under the Actions tab in GitHub. Once complete, the executables will appear under the Releases section.
+The [src/main/kotlin/openrndr](src/main/kotlin/openrndr) folder contains the original 
