@@ -5,32 +5,35 @@ _This is a private GitHub repository accessible only to attendees of the [Agenti
 Workshop Repository URL:
 https://github.com/xemantic/xemantic-ai-workshop
 
-
+Workshop Slides:
+https://xemantic.com/ai/workshops/slides/
 
 > [!NOTE]
-> This project is based on the [openrndr-template](https://github.com/openrndr/openrndr-template) projects, to bring all the goodies of the [OPENRNDR](https://openrndr.org/) creative coding framework to Agentic AI projects. Please refer to [OPENRNDR](https://openrndr.org/) documentation regarding this part.
+> This project is based on the [openrndr-template](https://github.com/openrndr/openrndr-template) project, to bring all goodies of the [OPENRNDR](https://openrndr.org/) creative coding framework to Agentic AI projects. Please refer to [OPENRNDR](https://openrndr.org/) documentation regarding this part.
 
 ## What do I need to start?
 
 ### Integrated Development Environment (IDE) for Kotlin
 
-You need to have either [IntelliJ IDEA]() or [Android Studio]() installed on your computer. In case of the IntelliJ IDEA the open source community edition (CE) is good enough.
+You need to have either [IntelliJ IDEA](https://www.jetbrains.com/idea/download/) or [Android Studio](https://developer.android.com/studio) installed on your computer. In case of the IntelliJ IDEA the open source community edition (CE) is good enough.
 
 > [!NOTE]
-> IntelliJ, and Android Studio derived from it, are Integrated Development Environments (IDE) allowing to conveniently edit and execute Kotlin code. Kotlin is the language used in all the code demonstrations in this repository.
+> IntelliJ IDEA (and Android Studio derived from it), are Integrated Development Environments (IDE) allowing to conveniently edit and execute Kotlin code. Kotlin is the language used in all the code demonstrations in this repository.
+
+### A GitHub account
+
+https://github.com
 
 ### Cloning workshop repository from GitHub
 
 > [!TIP]
-> If you've never configured GitHub access before on your computer, then GitHub Desktop will be probably the easiest way to start
-
-https://github.com/apps/desktop
+> If you've never configured GitHub access before on your computer, then [GitHub Desktop](https://github.com/apps/desktop) will be probably the easiest way to start
 
 ## Learning material
 
 ### Demonstrations based on the source code
 
-This project demonstrates several use cases of calling Anthropic API, while gradually  introducing more complex techniques and concepts.
+This project demonstrates several use cases of calling [Anthropic API](https://www.anthropic.com/api), while gradually introducing more complex techniques and concepts.
 
 In the [src/main/kotlin](src/main/kotlin) folder you will find these demo programs sorted by growing numbers, starting from [Demo010HelloWorld.kt](src/main/kotlin/Demo010HelloWorld.kt).
 
