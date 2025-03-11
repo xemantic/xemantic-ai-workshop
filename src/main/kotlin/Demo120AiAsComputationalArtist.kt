@@ -52,7 +52,7 @@ fun draw(drawer: Drawer) {
 }        
 ```
 
-When using HSLa, do something like ColorHSLa(h, s, l, a).toRGBa()
+When using HSLa, do something like: ColorHSLa(h, s, l, a).toRGBa()
 
     """)
     val drawFunction: String
@@ -88,7 +88,7 @@ fun main() = application {
         screenshot.trigger()
         launch(Dispatchers.IO) {
             val conversation = mutableListOf<Message>()
-            conversation += Message { +"Please draw me something" }
+            conversation += "Please draw me something"
             var repeat = true
             do {
                 val response = anthropic.messages.create {
@@ -113,20 +113,19 @@ class ScriptExecutor {
     fun execute(script: String): Any? {
 
         val compilationConfiguration = ScriptCompilationConfiguration {
-            //defaultImports(DependsOn::class, Repository::class)
             jvm {
                 dependenciesFromClassContext(contextClass = ScriptExecutor::class, wholeClasspath = true)
             }
-            //providedProperties(*(dependencies.map { it.name to KotlinType(it.type) }.toTypedArray()))
         }
 
-        val evaluationConfiguration = ScriptEvaluationConfiguration {
-            //providedProperties(*(dependencies.map { it.name to it.value }.toTypedArray()))
-            //implicitReceivers(*serviceMap.values.toTypedArray())
-            //implicitReceivers(Unit)
-        }
+        val evaluationConfiguration = ScriptEvaluationConfiguration()
 
-        val result = scriptingHost.eval(script.toScriptSource(), compilationConfiguration, evaluationConfiguration)
+        val result = scriptingHost.eval(
+            script.toScriptSource(),
+            compilationConfiguration,
+            evaluationConfiguration
+        )
+
         return when (result) {
             is ResultWithDiagnostics.Success -> {
                 val returnValue = result.value.returnValue

@@ -33,31 +33,29 @@ data class Note(
     val duration: Long
 )
 
-fun main() {
+fun main() = runBlocking {
     val synthesizer = getSynthesizer()
-    runBlocking {
-        val playMusicTool = Tool<PlayMusic> {
-            notes.forEach { note ->
-                launch {
-                    delay(note.startTime)
-                    synthesizer.noteOn(note.midiKey, 127)
-                    delay(note.duration)
-                    synthesizer.noteOff(note.midiKey, 0)
-                }
+    val playMusicTool = Tool<PlayMusic> {
+        notes.forEach { note ->
+            launch {
+                delay(note.startTime)
+                synthesizer.noteOn(note.midiKey, 127)
+                delay(note.duration)
+                synthesizer.noteOff(note.midiKey, 0)
             }
         }
-        val anthropic = Anthropic()
-        val response = anthropic.messages.create {
-            +Message {
-                +Image("data/workshop/mona-lisa.jpeg")
-                +"Please interpret this image as music and explain why you chose particular notes."
-            }
-            tools += playMusicTool
-//            toolChoice = ToolChoice.Tool<PlayMusic>()
-        }
-        response.toolUse!!.use()
-        println(response.text)
     }
+    val anthropic = Anthropic()
+    val response = anthropic.messages.create {
+        +Message {
+            +Image("data/workshop/mona-lisa.jpeg")
+            +"Please interpret this image as music and explain why you chose particular notes."
+        }
+        tools += playMusicTool
+//            toolChoice = ToolChoice.Tool<PlayMusic>()
+    }
+    response.toolUse!!.use()
+    println(response.text)
 }
 
 fun getSynthesizer(): MidiChannel = MidiSystem.getSynthesizer().run {

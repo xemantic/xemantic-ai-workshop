@@ -36,12 +36,12 @@ data class FibonacciTool(val n: Int)
 /**
  * What you will learn?
  *
- * - AI: tools as a basis for agentic use cases
- * - AI: how to define a tool input and seamlessly connect it
- *   with Kotlin logic
- * - Cognitive Science: LLM suck at math,
- *   do math with calculator, not with stochastic entropy
- * - Kotlin: serialization offers compile time class metadata
+ * - AI Dev: tools as a basis for agentic use cases.
+ * - AI Dev: how to define a tool input and seamlessly connect it
+ *   with Kotlin logic.
+ * - Cognitive Science: LLMs suck at math,
+ *   do math with calculator, not with harnessed stochastic entropy.
+ * - Kotlin: serialization offers compile time class metadata.
  */
 fun main() = runBlocking {
     val tool = Tool<FibonacciTool> {
@@ -49,7 +49,7 @@ fun main() = runBlocking {
     }
     val myTools = listOf(tool)
     val conversation = mutableListOf<Message>()
-    conversation += Message { +"What's Fibonacci number 42" }
+    conversation += "What's Fibonacci number 42"
     val anthropic = Anthropic()
     val toolUseResponse = anthropic.messages.create {
         messages = conversation

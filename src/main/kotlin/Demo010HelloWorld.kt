@@ -28,9 +28,7 @@ fun main() {
     val anthropic = Anthropic()
     val response = runBlocking {
         anthropic.messages.create {
-            +Message {
-                +"Hello World!"
-            }
+            +"Hello World!"
         }
     }
     println(response.text)

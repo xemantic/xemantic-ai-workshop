@@ -10,7 +10,6 @@ package com.xemantic.ai.workshop
 import com.xemantic.ai.anthropic.Anthropic
 import com.xemantic.ai.anthropic.event.Delta
 import com.xemantic.ai.anthropic.event.Event
-import com.xemantic.ai.anthropic.message.Message
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
@@ -22,16 +21,17 @@ import kotlinx.coroutines.runBlocking
  *   use cases with "human in the loop", so a human can start reading the
  *   LLM output ASAP.
  * - Cognitive Science: LLMs excel at generating stream of text constrained
- *   by specified criteria. Initially it was "us" assigning meanings to
- *   this stream, but
+ *   by specified criteria. Initially it was just a "poetry" of probabilistic
+ *   continuation. Nowadays, the output can be sharper than the sharpest
+ *   human mind.
  * - Kotlin: handling suspended calls in Kotlin `main` function
- *   with `runBlocking`
- * - Kotlin: request building DSL with operator overloading
+ *   with `runBlocking`.
+ * - Kotlin: streaming API for processing continuous input.
  */
 fun main() = runBlocking {
     Anthropic()
         .messages
-        .stream { +Message { +"Write me a poem." } }
+        .stream { +"Write me a poem." }
         .filterIsInstance<Event.ContentBlockDelta>()
         .map { (it.delta as Delta.TextDelta).text }
         .collect { delta -> print(delta) }

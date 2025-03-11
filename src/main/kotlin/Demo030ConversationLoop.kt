@@ -17,15 +17,17 @@ import kotlinx.coroutines.runBlocking
 /**
  * This example cumulates the conversation in the
  * endless loop (only limited by the size of the context window
- * accepted by the model).
+ * accepted by the model). It is the tiniest equivalent of "ChatGPT"
+ * or rather Claude AI.
  *
  * What you will learn?
  *
- * - AI: the use of system prompts for conditioning the conversation
+ * - AI Dev: the use of system prompts for conditioning the conversation
  * - Cognitive Science: conditioning AI's behaviour comes from role-playing
  * - Kotlin: multiline strings come handy for prompts
  */
-fun main() {
+fun main() = runBlocking {
+
     val systemPrompt = """
         Act as an art critic. I am an aspiring artists.
         Please be very critical regarding ideas of my conceptual artwork.
@@ -33,23 +35,23 @@ fun main() {
 
     val anthropic = Anthropic()
     val conversation = mutableListOf<Message>()
+
     while (true) {
         print("[user]> ")
         val line = readln()
         if (line == "exit") break
-        conversation += Message { +line }
+        conversation += line
         println("...Thinking...")
-        val response = runBlocking {
-            anthropic.messages.create {
-                messages = conversation
-                system(systemPrompt)
-            }
+        val response = anthropic.messages.create {
+            messages = conversation
+            system(systemPrompt)
         }
         conversation += response
         response.content.filterIsInstance<Text>().forEach {
             println("[assistant]> ${it.text}")
         }
     }
+
 }
 
 /*

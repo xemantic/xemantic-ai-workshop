@@ -30,19 +30,17 @@ data class KeyFinancialMetrics(
 
 }
 
-fun main() {
+fun main() = runBlocking {
 
     val tool = Tool<KeyFinancialMetrics>()
     val anthropic = Anthropic()
 
-    val response = runBlocking {
-        anthropic.messages.create {
-            +Message {
-                +Image("data/workshop/nvidia-income.png")
-                +"Decode financial metrics from supplied image"
-            }
-            tools += tool
+    val response = anthropic.messages.create {
+        +Message {
+            +Image("data/workshop/nvidia-income.png")
+            +"Decode financial metrics from supplied image"
         }
+        tools += tool
     }
 
     val metrics = response.toolUse!!.decodeInput() as KeyFinancialMetrics

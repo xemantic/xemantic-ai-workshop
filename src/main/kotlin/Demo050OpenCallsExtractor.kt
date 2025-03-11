@@ -30,6 +30,7 @@ data class OpenCallsReceiver(
 
     // No
     @Serializable
+    @SerialName("call")
     data class Call(
         val deadline: Instant, // TODO it should be LocalDate
         val title: String,
@@ -40,11 +41,11 @@ data class OpenCallsReceiver(
 /**
  * What you will learn?
  *
- * - AI: using tools just for structured input (without use)
- * - AI: we are forcing single tool use with `toolChoice`
- * - AI: powerful vision model of Claude LLM
- * - anthropic-sdk-kotlin: convenient helpers for files
- *   and media-type detection
+ * - AI Dev: using tools just for structured input (without use/execution).
+ * - AI Dev: we are forcing single tool use with `toolChoice`.
+ * - Cognitive Science: powerful vision model of Claude LLM - multimodality
+ * - Kotlin: anthropic-sdk-kotlin - convenient helpers for files
+ *   and media-type detection.
  */
 fun main() = runBlocking {
     val tool = Tool<OpenCallsReceiver>() // no tool use this time

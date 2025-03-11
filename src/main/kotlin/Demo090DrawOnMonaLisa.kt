@@ -52,6 +52,7 @@ private const val monaLisaPath = "data/workshop/mona-lisa.jpeg"
 
 fun main() = application {
 
+    // the size is matching image size
     configure {
         width = 512
         height = 760

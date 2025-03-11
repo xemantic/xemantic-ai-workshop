@@ -16,26 +16,22 @@ import kotlinx.coroutines.runBlocking
 /**
  * What you will learn?
  *
- * - AI: conducting variable length conversations with the LLM
- *   requires cumulating dialog in the context window
+ * - AI Dev: conducting variable length dialog with the LLM
+ *   requires cumulating conversation in the context window.
  * - Cognitive Science: the theory of mind and metacognition
  * - Kotlin: operator overloading for adding messages and content
  */
 fun main() = runBlocking {
     val anthropic = Anthropic()
     val conversation = mutableListOf<Message>()
-    conversation += Message {
-        +"Is it true, that to know we can die is to be dead already?"
-    }
+    conversation += "Is it true, that to know we can die is to be dead already?"
     val response1 = anthropic.messages.create {
         messages = conversation
     }
     println("Response 1:")
     println(response1.text)
     conversation += response1
-    conversation += Message {
-        +"Why do you think I asked you this question?"
-    }
+    conversation += "Why do you think I asked you this question?"
     val response2 = anthropic.messages.create {
         messages = conversation
     }
