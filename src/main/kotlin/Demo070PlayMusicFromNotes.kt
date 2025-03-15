@@ -48,11 +48,10 @@ fun main() = runBlocking {
     val anthropic = Anthropic()
     val response = anthropic.messages.create {
         +Message {
-            +Image("data/workshop/mona-lisa.jpeg")
-            +"Please interpret this image as music and explain why you chose particular notes."
+            +Image("data/workshop/happy-birthday-chords-two-hands.webp")
+            +"Please play this music."
         }
         tools += playMusicTool
-//            toolChoice = ToolChoice.Tool<PlayMusic>()
     }
     response.toolUse!!.use()
     println(response.text)
