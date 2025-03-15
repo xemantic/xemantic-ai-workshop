@@ -9,7 +9,6 @@
 package com.xemantic.ai.workshop
 
 import com.xemantic.ai.anthropic.Anthropic
-import com.xemantic.ai.anthropic.message.Message
 import kotlinx.coroutines.runBlocking
 
 /**
