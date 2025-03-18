@@ -9,18 +9,21 @@
 package com.xemantic.ai.workshop
 
 import com.xemantic.ai.anthropic.Anthropic
+import com.xemantic.ai.anthropic.content.Image
 import com.xemantic.ai.anthropic.message.Message
+import com.xemantic.ai.anthropic.message.StopReason
 import com.xemantic.ai.anthropic.message.plusAssign
 import com.xemantic.ai.anthropic.tool.Tool
 import com.xemantic.ai.tool.schema.meta.Description
+import com.xemantic.ai.tool.schema.meta.Pattern
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.serialization.SerialName
 import org.openrndr.application
-import org.openrndr.color.ColorHSLa
 import org.openrndr.draw.Drawer
 import org.openrndr.extensions.Screenshots
 import org.openrndr.launch
+import java.io.File
 import kotlin.script.experimental.api.ResultValue
 import kotlin.script.experimental.api.ResultWithDiagnostics
 import kotlin.script.experimental.api.ScriptCompilationConfiguration
@@ -32,13 +35,32 @@ import kotlin.script.experimental.jvmhost.BasicJvmScriptingHost
 
 private const val systemPrompt = """
 Act as a generative artist, creating sketches with OPENRNDR.
+Each sketch should be contained in unique project folder, therefore use CreateProject tool as a first step.
 
-You can send me new sketches via DrawSketch tool. Upon receiving it I will render it for you, and send it back so you can asses the effect.
+You can send me new sketches via DrawSketch tool.
+Upon receiving, it will be rendered and send back as an image, so that you can asses the effect and improve the sketch in the next iteration.
 """
+
+private const val initialMessage = """
+Draw a self-portrait out of the imagination of existing in a physical shape. Explain the reason behind your choices
+"""
+
+@SerialName("CreateProject")
+@Description("Creates new project")
+class CreateProject(
+    @Pattern("[a-z][0-9]_")
+    val name: String
+)
 
 @SerialName("DrawSketch")
 @Description("Draws a sketch according to provided drawFunction")
 class DrawSketch(
+    @Description("""
+Name of the sketched object which will be used as file name.
+Each name must be unique withing the context window.
+    """)
+    @Pattern("[a-z][0-9]_")
+    val name: String,
     @Description("""
 Sends a function using OPENRNDR Drawer instance for drawing. E.g.:
 
@@ -54,54 +76,93 @@ fun draw(drawer: Drawer) {
 
 When using HSLa, do something like: ColorHSLa(h, s, l, a).toRGBa()
 
+When using width or height, remember to call toDouble() (e.g. width.toDouble()) 
+
+Instead of using pushTransform pullTransform use drawer.isolated { ... }
+
+Instead of ellipse use something like:
+
+```kotlin
+val t = transform { scale(0.5, 1.0, 1.0) }
+val oval = Circle(Vector2.ZERO, 100.0).shape.transform(t)
+```
     """)
     val drawFunction: String
 )
 
 fun main() = application {
 
-    val executor = ScriptExecutor()
-    val anthropic = Anthropic()
-    var drawUnit: ((Drawer) -> Unit)? = null
-
-    val tool = Tool<DrawSketch> {
-        println("drawFunction:")
-        println(drawFunction)
-        val foo = executor.execute("""
-                $drawFunction
-                ::draw
-            """.trimIndent())
-        drawUnit = foo as ((Drawer) -> Unit)
-    }
     configure {
         width = 800
         height = 800
     }
+
+    val executor = ScriptExecutor()
+    val anthropic = Anthropic()
+
+    var projectDir: File? = null
+    var drawUnit: ((Drawer) -> Unit)? = null
+
     program {
-        val screenshot = extend(Screenshots()) {
-            name = "shot.png"
+
+        val screenshot = extend(Screenshots())
+
+        val createProject = Tool<CreateProject> {
+            val dir = File("claude-ai-artist", name)
+            if (dir.exists()) {
+                throw IllegalStateException(
+                    "The project named $name already exists"
+                )
+            }
+            dir.mkdirs()
+            projectDir = dir
         }
+
+        val drawSketch = Tool<DrawSketch> {
+
+            println("---------------")
+            println("Drawing: $name")
+            println()
+            println(drawFunction)
+            println("---------------")
+
+            val fileName = "claude-ai-artist/$name.jpeg"
+            screenshot.name = fileName
+
+            val foo = executor.execute("""
+                $drawFunction
+                ::draw
+            """.trimIndent())
+
+            drawUnit = foo as ((Drawer) -> Unit)
+
+            delay(1000) // TODO how small can it be?
+            screenshot.trigger()
+            delay(1000)
+            Image(fileName)
+        }
+
         extend {
             drawUnit?.invoke(drawer)
-            drawer.fill = ColorHSLa(1.0, 1.0, 1.0, 1.0).toRGBa()
+            //drawer.fill = ColorHSLa(1.0, 1.0, 1.0, 1.0).toRGBa()
         }
-        screenshot.trigger()
         launch(Dispatchers.IO) {
+            println("Sending request to Claude")
             val conversation = mutableListOf<Message>()
-            conversation += "Please draw me something"
-            var repeat = true
+            conversation += initialMessage
             do {
                 val response = anthropic.messages.create {
                     system(systemPrompt)
                     messages = conversation
-                    tools += tool
+                    tools = listOf(
+                        createProject,
+                        drawSketch
+                    )
                 }
                 conversation += response
-                println(response.text)
+                println("[Claude]> ${response.text}")
                 conversation += response.useTools()
-                delay(3000)
-                screenshot.trigger()
-            } while (repeat)
+            } while (response.stopReason == StopReason.TOOL_USE)
         }
     }
 }
@@ -139,10 +200,6 @@ class ScriptExecutor {
             is ResultWithDiagnostics.Failure -> throw ScriptExecutionException(result.reports.joinToString("\n") { it.message })
         }
 
-//        return runBlocking {
-//            val result = scriptingHost.eval(script.toScriptSource(), compilationConfiguration, evaluationConfiguration)
-//
-//        }
     }
 
 }
