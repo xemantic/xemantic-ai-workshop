@@ -24,20 +24,20 @@ import org.openrndr.math.Vector2
 
 @SerialName("DrawLines")
 @Description("Draws lines specified in the lines list")
-data class DrawLines(
+private data class DrawLines(
     val lines: List<Line>
 )
 
 @Serializable
 @SerialName("line")
-data class Line(
+private data class Line(
     val color: ColorRGBa,
     val thickness: Double,
     val start: Vector2,
     val end: Vector2
 )
 
-fun Line.draw(drawer: Drawer) {
+private fun Line.draw(drawer: Drawer) {
     drawer.apply {
         stroke = color
         strokeWeight = thickness
@@ -45,7 +45,7 @@ fun Line.draw(drawer: Drawer) {
     }
 }
 
-var linesToDraw = emptyList<Line>()
+private var linesToDraw = emptyList<Line>()
 
 fun main() = application {
 
@@ -72,9 +72,7 @@ fun main() = application {
 
         extend {
             linesToDraw.forEach { line ->
-                drawer.stroke = line.color
-                drawer.strokeWeight = line.thickness
-                drawer.lineSegment(line.start, line.end)
+                line.draw(drawer)
             }
         }
 
