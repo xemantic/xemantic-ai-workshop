@@ -1,5 +1,5 @@
 [versions]
-kotlin = "2.1.10"
+kotlin = "2.1.20"
 openrndr = "0.4.4"
 orx = "0.4.4"
 orml = "0.4.1"
@@ -7,7 +7,7 @@ orml = "0.4.1"
 slf4j = "2.0.10"
 log4j = "2.22.1"
 jackson = "2.16.1"
-anthropicSdkKotlin = "0.18.1"
+anthropicSdkKotlin = "0.19.0"
 ktor = "3.1.1"
 
 [libraries]
@@ -45,4 +45,4 @@ kotlin-plugin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization"
 shadow = { id = "com.github.johnrengelman.shadow", version = "8.1.1" }
 runtime = { id = "org.beryx.runtime", version = "1.13.0" }
 gitarchive-tomarkdown = { id = "org.openrndr.extra.gitarchiver.tomarkdown", version.ref = "orx" }
-versions = { id = "com.github.ben-manes.versions", version = "0.50.0" }
+versions = { id = "com.github.ben-manes.versions", version = "0.52.0" }
