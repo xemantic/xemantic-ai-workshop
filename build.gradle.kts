@@ -370,3 +370,7 @@ if (properties["openrndr.tasks"] == "true") {
         }
     }
 }
+
+tasks.withType<JavaExec>().configureEach {
+    standardInput = System.`in`
+}
