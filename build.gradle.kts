@@ -6,7 +6,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 group = "org.openrndr.template"
 version = "1.0.0"
 
-val applicationMainClass = "package com.xemantic.ai.workshop.openrndr.TemplateProgramKt"
+val applicationMainClass = "com.xemantic.ai.workshop.openrndr.TemplateProgramKt"
 
 /**  ## additional ORX features to be added to this project */
 val orxFeatures = setOf<String>(
@@ -159,7 +159,9 @@ tasks.withType<KotlinCompile> {
 project.setProperty("mainClassName", applicationMainClass)
 
 application {
-    if (hasProperty("openrndr.application")) {
+    if (hasProperty("launch")) {
+        mainClass.set("${property("launch")}Kt")
+    } else if (hasProperty("openrndr.application")) {
         mainClass.set("${property("openrndr.application")}")
     }
 }
