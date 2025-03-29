@@ -21,6 +21,7 @@ data class KeyFinancialMetrics(
 ) {
 
     @Serializable
+    @SerialName("entry")
     data class Entry(
         val year: Int,
         val revenue: BigDecimal,
