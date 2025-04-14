@@ -61,3 +61,28 @@ If you are not familiar with Kotlin, the first hour of the workshop is devoted t
 ## OPENRNDR examples
 
 The [src/main/kotlin/openrndr](src/main/kotlin/openrndr) folder contains the original 
+
+
+## Python
+
+```shell
+# Create a virtual environment
+python3 -m venv venv
+
+# Activate the virtual environment
+# On Windows:
+venv\Scripts\activate
+# On macOS/Linux:
+source venv/bin/activate
+
+# Install the Anthropic SDK
+pip install anthropic
+python3 src/main/python/hello_world.py
+```
+
+## TypeScript
+
+```shell
+npm install @anthropic-ai/sdk
+npx ts-node src/main/typescript/hello-world.ts
+```

@@ -11,3 +11,4 @@ ShaderError.glsl
 
 .vscode/
 bin/
+/node_modules
