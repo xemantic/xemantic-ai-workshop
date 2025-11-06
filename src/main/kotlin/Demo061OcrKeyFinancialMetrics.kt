@@ -31,7 +31,7 @@ data class KeyFinancialMetrics(
 
 }
 
-fun main7() = runBlocking {
+fun main() = runBlocking {
 
     val tool = Tool<KeyFinancialMetrics>()
     val anthropic = Anthropic()

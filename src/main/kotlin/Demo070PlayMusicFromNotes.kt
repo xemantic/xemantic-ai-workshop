@@ -34,7 +34,11 @@ data class Note(
     val duration: Long
 )
 
-fun main8() = runBlocking {
+fun main() {
+    main4()
+}
+
+fun main4() = runBlocking {
     val synthesizer = getSynthesizer()
     val toolbox = Toolbox {
         tool<PlayMusic> {
@@ -48,9 +52,6 @@ fun main8() = runBlocking {
             }
         }
     }
-    val playMusicTool = Tool<PlayMusic> {
-
-    }
     val anthropic = Anthropic()
     val response = anthropic.messages.create {
         +Message {
@@ -63,7 +64,7 @@ fun main8() = runBlocking {
     response.useTools(toolbox)
 }
 
-fun getSynthesizer(): MidiChannel = MidiSystem.getSynthesizer().run {
+private fun getSynthesizer(): MidiChannel = MidiSystem.getSynthesizer().run {
     open()
     loadInstrument(defaultSoundbank.instruments[0])
     channels[0]

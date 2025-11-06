@@ -293,6 +293,8 @@ class Openrndr {
 
     init {
         dependencies {
+            implementation(libs.kotlinx.serialization.json)
+            implementation(libs.kotlinx.serialization.core)
             runtimeOnly(openrndr("gl3"))
             runtimeOnly(openrndrNatives("gl3"))
             implementation(openrndr("openal"))

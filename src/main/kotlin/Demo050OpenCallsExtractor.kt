@@ -21,6 +21,7 @@ import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
 // This time we define more complex data structure
+@OptIn(ExperimentalTime::class)
 @SerialName("OpenCallsReceiver")
 @Description("Receives open call entries from the input")
 data class OpenCallsReceiver(
@@ -28,11 +29,10 @@ data class OpenCallsReceiver(
 ) {
 
     // No
-    @OptIn(ExperimentalTime::class)
     @Serializable
     @SerialName("call")
     data class Call(
-//        val deadline: Instant, // TODO it should be LocalDate
+        val deadline: Instant, // TODO it should be LocalDate
         val title: String,
     )
 
@@ -48,6 +48,7 @@ data class OpenCallsReceiver(
  * - Kotlin: anthropic-sdk-kotlin - convenient helpers for files
  *   and media-type detection.
  */
+@OptIn(ExperimentalTime::class)
 fun main() = runBlocking {
     val tool = Tool<OpenCallsReceiver>() // no tool use this time
     val anthropic = Anthropic()
@@ -62,10 +63,10 @@ fun main() = runBlocking {
 
     val receiver = response.toolUseInput<OpenCallsReceiver>()
 
-//    receiver.calls.sortedByDescending {
-//        it.deadline
-//    }.forEach {
-//        println("${it.deadline.toLocalDateTime(TimeZone.UTC).date}: ${it.title}")
-//    }
+    receiver.calls.sortedByDescending {
+        it.deadline
+    }.forEach {
+        println("${it.deadline}: ${it.title}")
+    }
 
 }
