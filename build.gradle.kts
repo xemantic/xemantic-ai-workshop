@@ -1,6 +1,7 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.gradle.internal.os.OperatingSystem
 import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 group = "org.openrndr.template"
@@ -151,7 +152,7 @@ java {
     targetCompatibility = JavaVersion.VERSION_17
 }
 tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "17"
+    compilerOptions.jvmTarget.set(JvmTarget.JVM_17)
 }
 
 // ------------------------------------------------------------------------------------------------------------------ //

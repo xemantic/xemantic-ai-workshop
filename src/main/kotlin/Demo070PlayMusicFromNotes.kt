@@ -12,6 +12,7 @@ import com.xemantic.ai.anthropic.Anthropic
 import com.xemantic.ai.anthropic.content.Image
 import com.xemantic.ai.anthropic.message.Message
 import com.xemantic.ai.anthropic.tool.Tool
+import com.xemantic.ai.anthropic.tool.Toolbox
 import com.xemantic.ai.tool.schema.meta.Description
 import kotlinx.coroutines.*
 import kotlinx.serialization.SerialName
@@ -33,17 +34,22 @@ data class Note(
     val duration: Long
 )
 
-fun main() = runBlocking {
+fun main8() = runBlocking {
     val synthesizer = getSynthesizer()
-    val playMusicTool = Tool<PlayMusic> {
-        notes.forEach { note ->
-            launch {
-                delay(note.startTime)
-                synthesizer.noteOn(note.midiKey, 127)
-                delay(note.duration)
-                synthesizer.noteOff(note.midiKey, 0)
+    val toolbox = Toolbox {
+        tool<PlayMusic> {
+            notes.forEach { note ->
+                launch {
+                    delay(note.startTime)
+                    synthesizer.noteOn(note.midiKey, 127)
+                    delay(note.duration)
+                    synthesizer.noteOff(note.midiKey, 0)
+                }
             }
         }
+    }
+    val playMusicTool = Tool<PlayMusic> {
+
     }
     val anthropic = Anthropic()
     val response = anthropic.messages.create {
@@ -51,10 +57,10 @@ fun main() = runBlocking {
             +Image("data/workshop/happy-birthday-chords-two-hands.webp")
             +"Please play this music."
         }
-        tools += playMusicTool
+        tools = toolbox.tools
     }
-    response.toolUse!!.use()
     println(response.text)
+    response.useTools(toolbox)
 }
 
 fun getSynthesizer(): MidiChannel = MidiSystem.getSynthesizer().run {

@@ -31,7 +31,7 @@ data class KeyFinancialMetrics(
 
 }
 
-fun main() = runBlocking {
+fun main7() = runBlocking {
 
     val tool = Tool<KeyFinancialMetrics>()
     val anthropic = Anthropic()
@@ -44,7 +44,7 @@ fun main() = runBlocking {
         tools += tool
     }
 
-    val metrics = response.toolUse!!.decodeInput() as KeyFinancialMetrics
+    val metrics = response.toolUseInput<KeyFinancialMetrics>()
     metrics.entries.forEach {
         println(it)
     }

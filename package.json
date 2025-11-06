@@ -1,5 +1,22 @@
 {
+  "name": "xemantic-ai-workshop",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Agentic AI & Creative Coding Workshop",
+  "scripts": {
+    "run": "tsx",
+    "demo01": "tsx src/main/typescript/Demo01HelloWorld.ts",
+    "demo02": "tsx src/main/typescript/Demo02Conversation.ts",
+    "demo03": "tsx src/main/typescript/Demo03ConversationLoop.ts",
+    "typecheck": "tsc --noEmit"
+  },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.39.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.0",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3"
   }
 }

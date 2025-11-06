@@ -16,9 +16,9 @@ import kotlinx.coroutines.runBlocking
 /**
  * What you will learn?
  *
- * - AI Dev: conducting variable length dialog with the LLM
+ * - context engineering: conducting variable length dialog with the LLM
  *   requires cumulating conversation in the context window.
- * - Cognitive Science: the theory of mind and metacognition
+ * - cognitive science: the theory of mind and metacognition
  * - Kotlin: operator overloading for adding messages and content
  */
 fun main() = runBlocking {

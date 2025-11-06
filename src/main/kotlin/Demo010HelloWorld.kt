@@ -12,10 +12,13 @@ import com.xemantic.ai.anthropic.Anthropic
 import kotlinx.coroutines.runBlocking
 
 /**
- * What you will learn?
+ * Demo 010: Hello World
  *
- * - AI Dev: communicating with Anthropic API basic input/output.
- * - Cognitive Science: the LLM output is non-deterministic.
+ * You will learn:
+ *
+ * - prompt engineering: sending text prompts to an LLM
+ * - context engineering: encapsulating prompts in messages.
+ * - cognitive science: the LLM output is non-deterministic.
  *   Run it multiple times with the same prompt to get a different output.
  *   Each time the internal mechanics of the neural net will differ.
  * - Kotlin: handling suspended calls in Kotlin `main` function
@@ -23,12 +26,10 @@ import kotlinx.coroutines.runBlocking
  * - Kotlin: request building DSL with operator overloading
  *   (+something).
  */
-fun main() {
+fun main() = runBlocking {
     val anthropic = Anthropic()
-    val response = runBlocking {
-        anthropic.messages.create {
-            +"Hello World!"
-        }
+    val response = anthropic.messages.create {
+        +"Hello World!"
     }
     println(response.text)
 }

@@ -15,11 +15,10 @@ import com.xemantic.ai.anthropic.tool.Tool
 import com.xemantic.ai.anthropic.tool.ToolChoice
 import com.xemantic.ai.tool.schema.meta.Description
 import kotlinx.coroutines.runBlocking
-import kotlinx.datetime.Instant
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 // This time we define more complex data structure
 @SerialName("OpenCallsReceiver")
@@ -29,10 +28,11 @@ data class OpenCallsReceiver(
 ) {
 
     // No
+    @OptIn(ExperimentalTime::class)
     @Serializable
     @SerialName("call")
     data class Call(
-        val deadline: Instant, // TODO it should be LocalDate
+//        val deadline: Instant, // TODO it should be LocalDate
         val title: String,
     )
 
@@ -41,9 +41,10 @@ data class OpenCallsReceiver(
 /**
  * What you will learn?
  *
- * - AI Dev: using tools just for structured input (without use/execution).
- * - AI Dev: we are forcing single tool use with `toolChoice`.
- * - Cognitive Science: powerful vision model of Claude LLM - multimodality
+ * - context engineering:
+ *     - using tools just for structured input (without use/execution).
+ *     - we are forcing single tool use with `toolChoice`.
+ * - cognitive science: powerful vision model of Claude LLM - multimodality
  * - Kotlin: anthropic-sdk-kotlin - convenient helpers for files
  *   and media-type detection.
  */
@@ -59,13 +60,12 @@ fun main() = runBlocking {
         toolChoice = ToolChoice.Tool<OpenCallsReceiver>()
     }
 
-    // TODO it should be response.toolUseInput<OpenCallReceiver>()
-    val receiver = response.toolUse!!.decodeInput() as OpenCallsReceiver
+    val receiver = response.toolUseInput<OpenCallsReceiver>()
 
-    receiver.calls.sortedByDescending {
-        it.deadline
-    }.forEach {
-        println("${it.deadline.toLocalDateTime(TimeZone.UTC).date}: ${it.title}")
-    }
+//    receiver.calls.sortedByDescending {
+//        it.deadline
+//    }.forEach {
+//        println("${it.deadline.toLocalDateTime(TimeZone.UTC).date}: ${it.title}")
+//    }
 
 }

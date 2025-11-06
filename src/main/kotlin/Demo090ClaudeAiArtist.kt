@@ -12,6 +12,7 @@ import com.xemantic.ai.anthropic.Anthropic
 import com.xemantic.ai.anthropic.message.Message
 import com.xemantic.ai.anthropic.tool.Tool
 import com.xemantic.ai.anthropic.tool.ToolChoice
+import com.xemantic.ai.anthropic.tool.Toolbox
 import com.xemantic.ai.tool.schema.meta.Description
 import kotlinx.coroutines.Dispatchers
 import kotlinx.serialization.SerialName
@@ -56,9 +57,11 @@ fun main() = application {
 
     program {
 
-        val tool = Tool<DrawLines> {
-            linesToDraw = lines
-            "line drawn"
+        val toolbox = Toolbox {
+            tool<DrawLines> {
+                linesToDraw = lines
+                "line drawn"
+            }
         }
         val systemPrompt = """
             You can draw on the canvas visible to the human.
@@ -81,9 +84,9 @@ fun main() = application {
                 system(systemPrompt)
                 +Message { +"Draw mona lisa" }
                 toolChoice = ToolChoice.Tool<DrawLines>()
-                tools += tool
+                tools = toolbox.tools
             }
-            response.useTools()
+            response.useTools(toolbox)
         }
     }
 

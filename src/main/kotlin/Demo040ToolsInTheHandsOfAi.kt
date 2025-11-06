@@ -12,6 +12,7 @@ import com.xemantic.ai.anthropic.Anthropic
 import com.xemantic.ai.anthropic.message.Message
 import com.xemantic.ai.anthropic.message.plusAssign
 import com.xemantic.ai.anthropic.tool.Tool
+import com.xemantic.ai.anthropic.tool.Toolbox
 import com.xemantic.ai.tool.schema.meta.Description
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.SerialName
@@ -36,32 +37,33 @@ data class FibonacciTool(val n: Int)
 /**
  * What you will learn?
  *
- * - AI Dev: tools as a basis for agentic use cases.
- * - AI Dev: how to define a tool input and seamlessly connect it
+ * - context enginnering: tools as a basis for agentic use cases.
+ *   how to define a tool input and seamlessly connect it
  *   with Kotlin logic.
- * - Cognitive Science: LLMs suck at math,
+ * - cognitive science: LLMs suck at math,
  *   do math with calculator, not with harnessed stochastic entropy.
  * - Kotlin: serialization offers compile time class metadata.
  */
 fun main() = runBlocking {
-    val tool = Tool<FibonacciTool> {
-        fibonacci(n)
+    val toolbox = Toolbox {
+        tool<FibonacciTool>() {
+            fibonacci(n)
+        }
     }
-    val myTools = listOf(tool)
     val conversation = mutableListOf<Message>()
     conversation += "What's Fibonacci number 42"
     val anthropic = Anthropic()
     val toolUseResponse = anthropic.messages.create {
         messages = conversation
-        tools = myTools
+        tools = toolbox.tools
     }
     println("Stop reason: ${toolUseResponse.stopReason}")
     println(toolUseResponse.text)
     conversation += toolUseResponse
-    conversation += toolUseResponse.useTools()
+    conversation += toolUseResponse.useTools(toolbox)
     val finalResponse = anthropic.messages.create {
         messages = conversation
-        tools = myTools
+        tools = toolbox.tools
     }
     println(finalResponse.text)
 }

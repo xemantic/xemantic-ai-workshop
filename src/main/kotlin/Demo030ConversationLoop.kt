@@ -15,6 +15,8 @@ import com.xemantic.ai.anthropic.message.plusAssign
 import kotlinx.coroutines.runBlocking
 
 /**
+ * Demo 030: Conversation Loop
+ *
  * This example cumulates the conversation in the
  * endless loop (only limited by the size of the context window
  * accepted by the model). It is the tiniest equivalent of "ChatGPT"
@@ -22,8 +24,9 @@ import kotlinx.coroutines.runBlocking
  *
  * What you will learn?
  *
- * - AI Dev: the use of system prompts for conditioning the conversation
- * - Cognitive Science: conditioning AI's behaviour comes from role-playing
+ * - prompt engineering: the use of system prompts for conditioning the conversation
+ * - cognitive science: conditioning AI's behaviour comes from role-playing
+ *   the model of mind
  * - Kotlin: multiline strings come handy for prompts
  */
 fun main() = runBlocking {

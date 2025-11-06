@@ -1,5 +1,6 @@
 [versions]
-kotlin = "2.1.20"
+kotlin = "2.2.21"
+kotlinxSerialization = "1.9.0"
 openrndr = "0.4.4"
 orx = "0.4.4"
 orml = "0.4.1"
@@ -7,7 +8,7 @@ orml = "0.4.1"
 slf4j = "2.0.10"
 log4j = "2.22.1"
 jackson = "2.16.1"
-anthropicSdkKotlin = "0.19.0"
+anthropicSdkKotlin = "0.24.0"
 ktor = "3.1.1"
 
 [libraries]
@@ -21,6 +22,8 @@ kotlin-scripting-dependencies = { module = "org.jetbrains.kotlin:kotlin-scriptin
 kotlin-scripting-dependencies-maven = { module = "org.jetbrains.kotlin:kotlin-scripting-dependencies-maven", version.ref = "kotlin" }
 kotlin-compiler-embeddable = { module = "org.jetbrains.kotlin:kotlin-compiler-embeddable", version.ref = "kotlin" }
 
+kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version.ref = "kotlinxSerialization" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
 
 slf4j-api = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4j" }
 slf4j-nop = { group = "org.slf4j", name = "slf4j-nop", version.ref = "slf4j" }

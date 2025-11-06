@@ -12,6 +12,7 @@ import com.xemantic.ai.anthropic.Anthropic
 import com.xemantic.ai.anthropic.content.Image
 import com.xemantic.ai.anthropic.message.Message
 import com.xemantic.ai.anthropic.tool.Tool
+import com.xemantic.ai.anthropic.tool.Toolbox
 import com.xemantic.ai.tool.schema.meta.Description
 import kotlinx.coroutines.Dispatchers
 import kotlinx.serialization.SerialName
@@ -61,12 +62,12 @@ fun main() = application {
     program {
         val monaLisaImage = loadImage(monaLisaPath)
         var circlesToDraw = emptyList<Circle>()
-        val myTools = listOf(
-            Tool<DrawCircles> {
+        val toolbox = Toolbox {
+            tool<DrawCircles> {
                 circlesToDraw += circles
                 "circle drawn"
             }
-        )
+        }
         val systemPrompt = """
             You can draw on a canvas visible to the human.
             Your expression will be drawn on top of the image given to you.
@@ -92,14 +93,14 @@ fun main() = application {
             println("Prompting Claude (Anthropic API) in the background")
             val response = anthropic.messages.create {
                 system(systemPrompt)
-                tools = myTools
+                tools = toolbox.tools
                 +Message {
                     +Image(monaLisaPath)
                     +"Draw black circles around the eyes of the person on this picture."
                 }
             }
             println(response.text)
-            response.useTools()
+            response.useTools(toolbox)
         }
     }
 

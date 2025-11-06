@@ -14,6 +14,7 @@ import com.xemantic.ai.anthropic.message.Message
 import com.xemantic.ai.anthropic.message.StopReason
 import com.xemantic.ai.anthropic.message.plusAssign
 import com.xemantic.ai.anthropic.tool.Tool
+import com.xemantic.ai.anthropic.tool.Toolbox
 import com.xemantic.ai.tool.schema.meta.Description
 import com.xemantic.ai.tool.schema.meta.Pattern
 import kotlinx.coroutines.Dispatchers
@@ -107,40 +108,46 @@ fun main() = application {
 
         val screenshot = extend(Screenshots())
 
-        val createProject = Tool<CreateProject> {
-            val dir = File("claude-ai-artist", name)
-            if (dir.exists()) {
-                throw IllegalStateException(
-                    "The project named $name already exists"
-                )
+        val toolbox = Toolbox {
+
+            tool<CreateProject> {
+                val dir = File("claude-ai-artist", name)
+                if (dir.exists()) {
+                    throw IllegalStateException(
+                        "The project named $name already exists"
+                    )
+                }
+                dir.mkdirs()
+                projectDir = dir
             }
-            dir.mkdirs()
-            projectDir = dir
-        }
 
-        val drawSketch = Tool<DrawSketch> {
+            tool<DrawSketch> {
 
-            println("---------------")
-            println("Drawing: $name")
-            println()
-            println(drawFunction)
-            println("---------------")
+                println("---------------")
+                println("Drawing: $name")
+                println()
+                println(drawFunction)
+                println("---------------")
 
-            val fileName = "claude-ai-artist/$name.jpeg"
-            screenshot.name = fileName
+                val fileName = "claude-ai-artist/$name.jpeg"
+                screenshot.name = fileName
 
-            val foo = executor.execute("""
+                val foo = executor.execute("""
                 $drawFunction
                 ::draw
             """.trimIndent())
 
-            drawUnit = foo as ((Drawer) -> Unit)
+                drawUnit = foo as ((Drawer) -> Unit)
 
-            delay(1000) // TODO how small can it be?
-            screenshot.trigger()
-            delay(1000)
-            Image(fileName)
+                delay(1000) // TODO how small can it be?
+                screenshot.trigger()
+                delay(1000)
+                Image(fileName)
+            }
+
         }
+
+        val drawSketch =
 
         extend {
             drawUnit?.invoke(drawer)
@@ -154,14 +161,11 @@ fun main() = application {
                 val response = anthropic.messages.create {
                     system(systemPrompt)
                     messages = conversation
-                    tools = listOf(
-                        createProject,
-                        drawSketch
-                    )
+                    tools = toolbox.tools
                 }
                 conversation += response
                 println("[Claude]> ${response.text}")
-                conversation += response.useTools()
+                conversation += response.useTools(toolbox)
             } while (response.stopReason == StopReason.TOOL_USE)
         }
     }
