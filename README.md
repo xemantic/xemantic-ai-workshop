@@ -1,7 +1,5 @@
 # xemantic-ai-workshop
 
-_This is a private GitHub repository accessible only to attendees of the [Agentic AI & Creative Coding workshops](https://xemantic.com/ai/workshops)._
-
 Workshop Repository URL:
 https://github.com/xemantic/xemantic-ai-workshop
 
