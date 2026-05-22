@@ -14,17 +14,23 @@ import kotlinx.coroutines.runBlocking
 /**
  * Demo 010: Hello World
  *
- * You will learn:
+ * Observations:
  *
- * - prompt engineering: sending text prompts to an LLM
- * - context engineering: encapsulating prompts in messages.
- * - cognitive science: the LLM output is non-deterministic.
- *   Run it multiple times with the same prompt to get a different output.
- *   Each time the internal mechanics of the neural net will differ.
- * - Kotlin: handling suspended calls in Kotlin `main` function
- *   with `runBlocking`.
- * - Kotlin: request building DSL with operator overloading
- *   (+something).
+ * - **Prompt engineering**:
+ *   - a text prompt is causing the "answer" to be generated
+ *   - early LLMs, like GPT2, were rather generating the most likely continuation
+ *
+ * - **Context engineering**:
+ *   - underlying ontolgy: communication theory
+ *   - we are receiving the answer as a message (from AI "assistant")
+ *   - the response contains metadata
+ *
+ * - **Cognitive science**: the LLM output is non-deterministic
+ *   (run it multiple times with the same prompt to get a different output)
+ *
+ * - **Kotlin**:
+ *   - `runBlocking` needed to call suspended functions from `main`
+ *   - the `+` operator builds a message.
  */
 fun main() = runBlocking {
     val anthropic = Anthropic()
@@ -32,6 +38,7 @@ fun main() = runBlocking {
         +"Hello World!"
     }
     println(response.text)
+    //println(response) // uncomment to also show metadata
 }
 
 /*
