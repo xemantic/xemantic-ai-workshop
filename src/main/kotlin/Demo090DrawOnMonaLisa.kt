@@ -61,7 +61,7 @@ fun main() = application {
 
     program {
         val monaLisaImage = loadImage(monaLisaPath)
-        var circlesToDraw = emptyList<Circle>()
+        val circlesToDraw = mutableListOf<Circle>()
         val toolbox = Toolbox {
             tool<DrawCircles> {
                 circlesToDraw += circles

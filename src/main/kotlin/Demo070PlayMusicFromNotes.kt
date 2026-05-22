@@ -55,8 +55,7 @@ fun main4() = runBlocking {
     val anthropic = Anthropic()
     val response = anthropic.messages.create {
         +Message {
-            +Image("data/workshop/happy-birthday-chords-two-hands.webp")
-            +"Please play this music."
+            +"Compose music in arabic scale"
         }
         tools = toolbox.tools
     }

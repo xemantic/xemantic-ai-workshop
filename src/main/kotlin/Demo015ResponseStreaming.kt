@@ -16,19 +16,26 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
 
 /**
- * What you will learn?
+ * Demo 015: Response Streaming
  *
- * - prompt engineering: prompting is like behavioral conditioning.
- * - context engineering: inference takes time, streaming works better for interactive
- *   use cases with "human in the loop", so a human can start reading the
- *   LLM output ASAP.
- * - cognitive science: LLMs excel at generating stream of text constrained
- *   by specified criteria. Initially it was just a "poetry" of probabilistic
- *   continuation. Nowadays, the output can be sharper than the sharpest
- *   human mind.
- * - Kotlin: handling suspended calls in Kotlin `main` function
- *   with `runBlocking`.
- * - Kotlin: streaming API for processing continuous input.
+ * Observations:
+ *
+ * - **Prompt engineering**:
+ *   - prompting is like if philosophy was a programming language
+ *
+ * - **Context engineering**:
+ *   - inference takes time, streaming works better for interactive
+ *     use cases with "human in the loop", so a human can start reading the
+ *     LLM output ASAP.
+ *
+ * - **Cognitive science**:
+ *   - LLMs excel at generating stream of text constrained by specified criteria.
+ *     Initially it was just a "poetry" of probabilistic continuation.
+ *     Nowadays, the output can be sharper than the sharpest human mind,
+ *     unmistakably adhering to rules in play.
+
+ * - **Kotlin**:
+ *   - streaming API for processing continuous input.
  */
 fun main() = runBlocking {
     Anthropic()

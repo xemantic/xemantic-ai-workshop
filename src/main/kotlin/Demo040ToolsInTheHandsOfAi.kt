@@ -18,7 +18,6 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.SerialName
 
 // first we define a standard Kotlin function
-// look how beautiful tail recursion is in Kotlin!
 tailrec fun fibonacci(
     n: Int, a: Int = 0, b: Int = 1
 ): Int = when (n) {
@@ -36,8 +35,8 @@ data class FibonacciTool(val n: Int)
 
 /**
  * What you will learn?
- *
- * - context enginnering: tools as a basis for agentic use cases.
+ * - **Prompt engineering**:
+ * - **Context enginnering**: tools as a basis for agentic use cases.
  *   how to define a tool input and seamlessly connect it
  *   with Kotlin logic.
  * - cognitive science: LLMs suck at math,

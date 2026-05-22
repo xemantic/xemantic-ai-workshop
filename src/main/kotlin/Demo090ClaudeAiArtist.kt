@@ -59,10 +59,13 @@ fun main() = application {
 
         val toolbox = Toolbox {
             tool<DrawLines> {
+                println(this)
                 linesToDraw = lines
                 "line drawn"
             }
         }
+
+        println(toolbox.tools)
         val systemPrompt = """
             You can draw on the canvas visible to the human.
             
@@ -82,7 +85,7 @@ fun main() = application {
         launch(Dispatchers.IO) {
             val response = anthropic.messages.create {
                 system(systemPrompt)
-                +Message { +"Draw mona lisa" }
+                +Message { +"Draw apple logo" }
                 toolChoice = ToolChoice.Tool<DrawLines>()
                 tools = toolbox.tools
             }

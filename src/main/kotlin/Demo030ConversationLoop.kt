@@ -9,8 +9,11 @@
 package com.xemantic.ai.workshop
 
 import com.xemantic.ai.anthropic.Anthropic
+import com.xemantic.ai.anthropic.cache.CacheControl
 import com.xemantic.ai.anthropic.content.Text
 import com.xemantic.ai.anthropic.message.Message
+import com.xemantic.ai.anthropic.message.System
+import com.xemantic.ai.anthropic.message.addCacheBreakpoint
 import com.xemantic.ai.anthropic.message.plusAssign
 import kotlinx.coroutines.runBlocking
 
@@ -20,14 +23,18 @@ import kotlinx.coroutines.runBlocking
  * This example cumulates the conversation in the
  * endless loop (only limited by the size of the context window
  * accepted by the model). It is the tiniest equivalent of "ChatGPT"
- * or rather Claude AI.
+ * or rather claude.ai.
  *
- * What you will learn?
+ * Observaitions:
  *
- * - prompt engineering: the use of system prompts for conditioning the conversation
- * - cognitive science: conditioning AI's behaviour comes from role-playing
- *   the model of mind
- * - Kotlin: multiline strings come handy for prompts
+ * - **Prompt engineering**:
+ *   - system prompt: is different that the initial message
+ *
+ * - **Context engineering**:
+ *   - caching: the major factor reducing LLM costs
+ *
+ * - **Cognitive science**:
+ *   - conditioning LLM's expresion comes from role-playing
  */
 fun main() = runBlocking {
 
@@ -46,8 +53,11 @@ fun main() = runBlocking {
         conversation += line
         println("...Thinking...")
         val response = anthropic.messages.create {
-            messages = conversation
-            system(systemPrompt)
+            system = listOf(System(
+                text = systemPrompt,
+                cacheControl = CacheControl.Ephemeral()
+            ))
+            messages = conversation.addCacheBreakpoint()
         }
         conversation += response
         response.content.filterIsInstance<Text>().forEach {

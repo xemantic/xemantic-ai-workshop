@@ -18,6 +18,7 @@ import kotlinx.coroutines.runBlocking
  *
  * - **Prompt engineering**:
  *   - a text prompt is causing the "answer" to be generated
+ *   - inference: the process of generating the response by the model
  *   - early LLMs, like GPT2, were rather generating the most likely continuation
  *
  * - **Context engineering**:

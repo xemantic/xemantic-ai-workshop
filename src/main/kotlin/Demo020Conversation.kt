@@ -14,12 +14,19 @@ import com.xemantic.ai.anthropic.message.plusAssign
 import kotlinx.coroutines.runBlocking
 
 /**
- * What you will learn?
+ * Demo 020: Conversation
  *
- * - context engineering: conducting variable length dialog with the LLM
- *   requires cumulating conversation in the context window.
- * - cognitive science: the theory of mind and metacognition
- * - Kotlin: operator overloading for adding messages and content
+ * Observations:
+ *
+ * - **Context engineering**:
+ *   - conducting a variable length dialog with the LLM
+ *     requires cumulating conversation in the context window.
+ *
+ * - **Cognitive science**:
+ *   - the theory of mind and metacognition (introspection)
+ *
+ * - **Kotlin**:
+ *   - operator overloading for adding messages and content
  */
 fun main() = runBlocking {
     val anthropic = Anthropic()
