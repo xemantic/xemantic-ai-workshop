@@ -9,7 +9,11 @@
 package com.xemantic.ai.workshop.intro
 
 // Basic Class
-class Person(val name: String, var age: Int) {
+class Person(
+    val name: String,
+    var age: Int
+) {
+
     // Property with custom getter
     val isAdult: Boolean
         get() = age >= 18
