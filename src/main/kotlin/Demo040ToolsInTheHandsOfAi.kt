@@ -36,7 +36,7 @@ data class FibonacciTool(val n: Int)
 /**
  * What you will learn?
  * - **Prompt engineering**:
- * - **Context enginnering**: tools as a basis for agentic use cases.
+ * - **Context engineering**: tools as a basis for agentic use cases.
  *   how to define a tool input and seamlessly connect it
  *   with Kotlin logic.
  * - cognitive science: LLMs suck at math,

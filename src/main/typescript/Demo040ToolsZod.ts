@@ -7,23 +7,30 @@
  */
 
 /**
- * Demo 040: Tools in the Hands of AI
+ * Demo 040 (zod variant): Tools in the Hands of AI
+ *
+ * This mirrors the Kotlin `anthropic-sdk-kotlin` pattern where a tool
+ * is defined as a typed data class with field descriptions, and the
+ * SDK generates the JSON Schema automatically. In TypeScript we get
+ * the same ergonomics with Zod 4, which ships JSON Schema generation
+ * as a built-in (`z.toJSONSchema`).
  *
  * What you will learn?
  *
- * - Context engineering: tools as a basis for agentic use cases -
- *   how to define a tool input schema and connect it with TypeScript
- *   logic.
- * - Cognitive science: LLMs are bad at math - do math with a
- *   calculator, not with harnessed stochastic entropy.
+ * - Context engineering: defining the tool input as a typed schema
+ *   rather than a hand-written JSON Schema object.
  * - TypeScript:
- *   - tool schemas are JSON Schema objects; type guards on
- *     `block.type` narrow the content union to `tool_use` so we
- *     can read `block.input` safely.
+ *   - `z.infer<typeof Schema>` gives us the TS type for free.
+ *   - `Schema.parse(block.input)` validates *and* narrows the type
+ *     in a single call - no more `as` casts.
+ *
+ * Setup:
+ *     npm install zod
  */
 
 import Anthropic from '@anthropic-ai/sdk';
 import type { MessageParam } from '@anthropic-ai/sdk/resources/messages';
+import { z } from 'zod';
 
 // Plain TypeScript function - the "tool" implementation. The LLM never
 // runs this itself; it only requests that we run it on its behalf.
@@ -33,33 +40,28 @@ function fibonacci(n: number, a: number = 0, b: number = 1): number {
   return fibonacci(n - 1, b, a + b);
 }
 
+// Single source of truth: the schema drives both the JSON Schema we
+// hand to the model AND the static TS type we use in our own code.
+const FibonacciInput = z.object({
+  n: z.number().int().describe("The Fibonacci number to calculate"),
+});
+type FibonacciInput = z.infer<typeof FibonacciInput>;
+
 const anthropic = new Anthropic();
 const conversation: MessageParam[] = [];
 
-// Tool declaration: name, description and a JSON Schema for the inputs.
-// The model reads the description to decide *when* to call the tool
-// and the schema to know *what* to pass.
 const tools = [
   {
     name: "Fibonacci",
     description: "Calculates Fibonacci number n",
-    input_schema: {
-      type: "object" as const,
-      properties: {
-        n: {
-          type: "number",
-          description: "The Fibonacci number to calculate"
-        }
-      },
-      required: ["n"]
-    }
-  }
+    // Zod 4 generates JSON Schema natively; describe() calls become
+    // JSON Schema `description` fields. `target: "draft-7"` keeps the
+    // output compatible with the Anthropic tool input schema format.
+    input_schema: z.toJSONSchema(FibonacciInput, { target: "draft-7" }) as any,
+  },
 ];
 
-conversation.push({
-  role: "user",
-  content: "What's Fibonacci number 42"
-});
+conversation.push({ role: "user", content: "What's Fibonacci number 42" });
 
 // First turn: the model decides to call the Fibonacci tool instead of
 // attempting (and likely failing) to compute the value itself.
@@ -71,31 +73,22 @@ const toolUseResponse = await anthropic.messages.create({
 });
 
 console.log(`Stop reason: ${toolUseResponse.stop_reason}`);
+conversation.push({ role: "assistant", content: toolUseResponse.content });
 
-// `content` is a discriminated union - we use `.find` + a type guard
-// to safely extract any text the model wrote alongside the tool call.
-const textContent = toolUseResponse.content.find(block => block.type === 'text');
-if (textContent && textContent.type === 'text') {
-  console.log(textContent.text);
-}
-
-conversation.push({
-  role: "assistant",
-  content: toolUseResponse.content
-});
-
-// Execute every tool_use block the model emitted and feed the results
-// back as `tool_result` content blocks keyed by the original tool_use_id.
+// Execute every tool_use block. `parse` validates the model's output
+// against the schema; if the model ever returns the wrong shape, we
+// fail fast here instead of silently producing wrong math.
 for (const block of toolUseResponse.content) {
   if (block.type === 'tool_use') {
-    const result = fibonacci((block.input as { n: number }).n);
+    const args: FibonacciInput = FibonacciInput.parse(block.input);
+    const result = fibonacci(args.n);
     conversation.push({
       role: "user",
       content: [{
         type: "tool_result",
         tool_use_id: block.id,
-        content: String(result)
-      }]
+        content: String(result),
+      }],
     });
   }
 }

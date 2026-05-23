@@ -22,7 +22,7 @@ import kotlinx.coroutines.runBlocking
  *   - early LLMs, like GPT2, were rather generating the most likely continuation
  *
  * - **Context engineering**:
- *   - underlying ontolgy: communication theory
+ *   - underlying ontology: communication theory
  *   - we are receiving the answer as a message (from AI "assistant")
  *   - the response contains metadata
  *
@@ -59,7 +59,7 @@ fun main() = runBlocking {
     })
 
   Note: the whole received response contains much more details
-  and nested contend. For the convenience we are accessing
-  extension property named `text`, so only the actual textual
+  and nested content. For convenience we are accessing
+  an extension property named `text`, so only the actual textual
   response from the LLM is displayed.
 */

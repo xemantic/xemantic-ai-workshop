@@ -34,10 +34,28 @@ data class Note(
     val duration: Long
 )
 
-fun main() {
-    main4()
-}
-
+/**
+ * Demo 070: Play Music from Notes
+ *
+ * The LLM is given a tool that plays MIDI notes. We ask it to "compose"
+ * a melody and it emits a list of timed `noteOn`/`noteOff` events that
+ * are handed straight to the local synthesizer.
+ *
+ * Observations:
+ *
+ * - **Context engineering**:
+ *   - tools can extend the LLM with real-world effectors, not just
+ *     calculators - here, a MIDI synthesizer.
+ *
+ * - **Cognitive science**:
+ *   - LLMs carry musical knowledge implicit in their training data,
+ *     and can express it through any output channel we expose to them.
+ *
+ * - **Kotlin**:
+ *   - structured concurrency: each note is scheduled on its own
+ *     coroutine via `launch { delay(...) }`, which gives us
+ *     polyphony almost for free.
+ */
 fun main4() = runBlocking {
     val synthesizer = getSynthesizer()
     val toolbox = Toolbox {

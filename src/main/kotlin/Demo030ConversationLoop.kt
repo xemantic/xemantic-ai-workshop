@@ -25,21 +25,21 @@ import kotlinx.coroutines.runBlocking
  * accepted by the model). It is the tiniest equivalent of "ChatGPT"
  * or rather claude.ai.
  *
- * Observaitions:
+ * Observations:
  *
  * - **Prompt engineering**:
- *   - system prompt: is different that the initial message
+ *   - system prompt: is different from the initial message
  *
  * - **Context engineering**:
  *   - caching: the major factor reducing LLM costs
  *
  * - **Cognitive science**:
- *   - conditioning LLM's expresion comes from role-playing
+ *   - conditioning the LLM's expression comes from role-playing
  */
 fun main() = runBlocking {
 
     val systemPrompt = """
-        Act as an art critic. I am an aspiring artists.
+        Act as an art critic. I am an aspiring artist.
         Please be very critical regarding ideas of my conceptual artwork.
     """.trimIndent()
 

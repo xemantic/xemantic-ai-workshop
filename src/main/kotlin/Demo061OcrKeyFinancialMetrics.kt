@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2025. Kazimierz Pogoda / Xemantic. All rights reserved.
+ *
+ * This code is provided for educational purposes as part of the
+ * "Agentic AI & Creative Coding" workshop.
+ * Unauthorized reproduction or distribution is prohibited.
+ */
+
 @file:UseSerializers(BigDecimalSerializer::class)
 
 package com.xemantic.ai.workshop
@@ -31,6 +39,27 @@ data class KeyFinancialMetrics(
 
 }
 
+/**
+ * Demo 061: OCR Key Financial Metrics
+ *
+ * A practical application of structured extraction: we send a screenshot
+ * of an income statement and ask the model to populate a typed data
+ * structure with the figures.
+ *
+ * Observations:
+ *
+ * - **Context engineering**:
+ *   - tools are not only for execution - they double as a typed
+ *     "output schema" for structured data extraction.
+ *
+ * - **Cognitive science**:
+ *   - multimodal vision combined with tabular reasoning lets the
+ *     model perform OCR + interpretation in a single step.
+ *
+ * - **Kotlin**:
+ *   - `BigDecimal` via `@file:UseSerializers` keeps financial values
+ *     exact - no floating-point drift when we sum revenues.
+ */
 fun main() = runBlocking {
 
     val tool = Tool<KeyFinancialMetrics>()

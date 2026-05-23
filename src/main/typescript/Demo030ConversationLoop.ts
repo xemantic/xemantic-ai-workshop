@@ -6,12 +6,38 @@
  * Unauthorized reproduction or distribution is prohibited.
  */
 
+/**
+ * Demo 030: Conversation Loop
+ *
+ * This example accumulates the conversation in an endless loop
+ * (only limited by the size of the context window accepted by the
+ * model). It is the tiniest equivalent of "ChatGPT", or rather claude.ai.
+ *
+ * Observations:
+ *
+ * - Prompt engineering:
+ *   - system prompt: is different from the initial message
+ *
+ * - Context engineering:
+ *   - caching: the major factor reducing LLM costs
+ *
+ * - Cognitive science:
+ *   - conditioning the LLM's expression comes from role-playing
+ *
+ * - TypeScript:
+ *   - `readline/promises` gives us a Promise-based `question()`,
+ *     so the loop reads naturally without callback nesting.
+ *   - the system prompt is sent as a typed block with
+ *     `cache_control` so the unchanging prefix is cache-hit on
+ *     subsequent turns.
+ */
+
 import Anthropic from '@anthropic-ai/sdk';
 import type { MessageParam } from '@anthropic-ai/sdk/resources/messages';
 import * as readline from 'readline/promises';
 
 const systemPrompt = `
-Act as an art critic. I am an aspiring artists.
+Act as an art critic. I am an aspiring artist.
 Please be very critical regarding ideas of my conceptual artwork.
 `.trim();
 
@@ -36,9 +62,16 @@ while (true) {
   console.log('...Thinking...');
 
   const response = await anthropic.messages.create({
-    model: "claude-sonnet-4-5-20250929",
+    model: "claude-opus-4-7",
     max_tokens: 1024,
-    system: systemPrompt,
+    // `cache_control` lets the API reuse this prefix across turns -
+    // the system block is identical on every request, so we only pay
+    // full price for it once.
+    system: [{
+      type: "text",
+      text: systemPrompt,
+      cache_control: { type: "ephemeral" }
+    }],
     messages: conversation,
   });
 
@@ -47,7 +80,8 @@ while (true) {
     content: response.content
   });
 
-  // Filter and display only text content
+  // The response may contain non-text blocks (e.g. tool use) in more
+  // advanced demos, so we explicitly filter for text here.
   response.content
     .filter(block => block.type === 'text')
     .forEach(block => {

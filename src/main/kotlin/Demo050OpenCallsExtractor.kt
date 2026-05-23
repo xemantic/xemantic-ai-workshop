@@ -28,7 +28,6 @@ data class OpenCallsReceiver(
     val calls: List<Call>
 ) {
 
-    // No
     @Serializable
     @SerialName("call")
     data class Call(

@@ -6,9 +6,27 @@
  * Unauthorized reproduction or distribution is prohibited.
  */
 
+/**
+ * Demo 050: Open Calls Extractor
+ *
+ * What you will learn?
+ *
+ * - Context engineering:
+ *   - using tools just for structured input (without execution).
+ *   - we are forcing single tool use with `tool_choice`.
+ * - Cognitive science: powerful vision model of Claude LLM -
+ *   multimodality.
+ * - TypeScript:
+ *   - we describe the expected output as both a JSON Schema (for
+ *     the model) and a TS interface (for our code) - the cast on
+ *     `block.input` bridges the two.
+ */
+
 import Anthropic from '@anthropic-ai/sdk';
 import * as fs from 'fs';
 
+// TS shape that mirrors the JSON Schema below - used after we cast
+// `block.input`, so consumers get static types instead of `any`.
 interface Call {
   deadline: string;
   title: string;
@@ -20,9 +38,13 @@ interface OpenCallsReceiver {
 
 const anthropic = new Anthropic();
 
+// The API expects images as base64-encoded strings, regardless of
+// whether they live on disk or in memory.
 const imageData = fs.readFileSync('data/workshop/open-calls-creatives.jpg');
 const base64Image = imageData.toString('base64');
 
+// Tool with no implementation: we never run it. Its only purpose is to
+// *shape* the model's output - we then read `block.input` directly.
 const tools = [
   {
     name: "OpenCallsReceiver",
@@ -54,7 +76,7 @@ const tools = [
 ];
 
 const response = await anthropic.messages.create({
-  model: "claude-sonnet-4-5-20250929",
+  model: "claude-opus-4-7",
   max_tokens: 1024,
   messages: [{
     role: "user",
@@ -74,12 +96,17 @@ const response = await anthropic.messages.create({
     ]
   }],
   tools: tools,
+  // Forcing the model to use this specific tool guarantees that the
+  // response is a tool_use block matching our schema - no free-form
+  // text to parse, no schema drift.
   tool_choice: { type: "tool", name: "OpenCallsReceiver" }
 });
 
 for (const block of response.content) {
   if (block.type === 'tool_use') {
     const receiver = block.input as OpenCallsReceiver;
+    // Sort by ISO-formatted deadline descending - lexicographic order
+    // matches chronological order for ISO 8601 strings.
     const sortedCalls = receiver.calls.sort((a, b) =>
       b.deadline.localeCompare(a.deadline)
     );
@@ -89,9 +116,3 @@ for (const block of response.content) {
     }
   }
 }
-
-/*
-  Note: We use tool_choice to force the model to use our specific
-  tool for structured data extraction. This is useful when we want
-  to ensure a particular output format.
-*/
