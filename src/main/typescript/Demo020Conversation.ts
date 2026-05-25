@@ -29,49 +29,38 @@ import Anthropic from '@anthropic-ai/sdk';
 import type { MessageParam } from '@anthropic-ai/sdk/resources/messages';
 
 const anthropic = new Anthropic();
-const conversation: MessageParam[] = [];
+const context: MessageParam[] = [];
 
-// First turn.
-conversation.push({
+context.push({
   role: "user",
   content: "Is it true, that to know we can die is to be dead already?"
 });
-
 const response1 = await anthropic.messages.create({
   model: "claude-opus-4-7",
   max_tokens: 1024,
-  messages: conversation,
+  messages: context,
 });
-
-console.log("Response 1:");
-console.log(response1.content[0].text);
-
-// Append the assistant's reply, then ask a follow-up that only makes
-// sense if the prior context is present.
-conversation.push({
+context.push({
   role: "assistant",
   content: response1.content
 });
+console.log(`Response 1: ${response1.content[0].text}`);
 
-// Second turn - relies on the model remembering what was asked first.
-conversation.push({
+// A follow-up that only makes sense if the prior context is present.
+context.push({
   role: "user",
   content: "Why do you think I asked you this question?"
 });
-
 const response2 = await anthropic.messages.create({
   model: "claude-opus-4-7",
   max_tokens: 1024,
-  messages: conversation,
+  messages: context,
 });
-
-console.log("\nResponse 2:");
-console.log(response2.content[0].text);
-
-conversation.push({
+context.push({
   role: "assistant",
   content: response2.content
 });
+console.log(`Response 2: ${response2.content[0].text}`);
 
-console.log("\nThe whole past conversation is included in the token window:");
-console.log(JSON.stringify(conversation, null, 2));
+// the whole past conversation is included in the token window
+console.log(JSON.stringify(context, null, 2));

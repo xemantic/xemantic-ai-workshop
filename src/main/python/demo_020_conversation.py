@@ -31,34 +31,25 @@ client = anthropic.Anthropic()
 
 # Conversation history - this list grows with each turn and is
 # resent to the model on every request so it has full context.
-conversation = []
-conversation.append({"role": "user", "content": "Is it true, that to know we can die is to be dead already?"})
+context = []
 
+context.append({"role": "user", "content": "Is it true, that to know we can die is to be dead already?"})
 response1 = client.messages.create(
     model="claude-opus-4-7",
     max_tokens=1024,
-    messages=conversation
+    messages=context
 )
+context.append({"role": "assistant", "content": response1.content})
+print(f"Response 1: {response1.content[0].text}")
 
-print("Response 1:")
-print(response1.content[0].text)
-
-# Append the assistant's reply back into the conversation, then ask
-# a follow-up that only makes sense if the prior context is present.
-conversation.append({"role": "assistant", "content": response1.content})
-conversation.append({"role": "user", "content": "Why do you think I asked you this question?"})
-
+# A follow-up that only makes sense if the prior context is present.
+context.append({"role": "user", "content": "Why do you think I asked you this question?"})
 response2 = client.messages.create(
     model="claude-opus-4-7",
     max_tokens=1024,
-    messages=conversation
+    messages=context
 )
+context.append({"role": "assistant", "content": response2.content})
+print(f"Response 2: {response2.content[0].text}")
 
-print("Response 2:")
-print(response2.content[0].text)
-
-conversation.append({"role": "assistant", "content": response2.content})
-
-print("The whole past conversation is included in the token window:")
-print(conversation)
-print(response2)
+print(context)  # the whole past conversation is included in the token window

@@ -29,26 +29,25 @@ import kotlinx.coroutines.runBlocking
  *   - operator overloading for adding messages and content
  */
 fun main() = runBlocking {
-    val anthropic = Anthropic()
-    val conversation = mutableListOf<Message>()
-    conversation += "Is it true, that to know we can die is to be dead already?"
-    val response1 = anthropic.messages.create {
-        messages = conversation
-    }
-    println("Response 1:")
-    println(response1.text)
-    conversation += response1
-    conversation += "Why do you think I asked you this question?"
-    val response2 = anthropic.messages.create {
-        messages = conversation
-    }
-    println("Response 2:")
-    println(response2.text)
-    conversation += response2
 
-    println("The whole past conversation is included in the token window:")
-    println(conversation)
-    println(response2)
+    val anthropic = Anthropic()
+    val context = mutableListOf<Message>()
+
+    context += "Is it true, that to know we can die is to be dead already?"
+    val response1 = anthropic.messages.create {
+        messages = context
+    }
+    context += response1
+    println("Response 1: ${response1.text}")
+
+    context += "Why do you think I asked you this question?"
+    val response2 = anthropic.messages.create {
+        messages = context
+    }
+    context += response2
+    println("Response 2: ${response2.text}")
+
+    println(context) // the whole past convesation is included in the token window
 }
 
 /*

@@ -33,63 +33,53 @@ use claudius::{
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let client = Anthropic::new(None)?;
     let model = Model::Known(KnownModel::ClaudeOpus47);
-    let mut conversation: Vec<MessageParam> = Vec::new();
+    let mut context: Vec<MessageParam> = Vec::new();
 
-    // First turn.
-    conversation.push(MessageParam::user(
+    context.push(MessageParam::user(
         "Is it true, that to know we can die is to be dead already?",
     ));
-
     let response1 = client
         .send(MessageCreateParams::new(
             1024,
-            conversation.clone(),
+            context.clone(),
             model.clone(),
         ))
         .await?;
-
-    println!("Response 1:");
-    print_text(&response1);
-
-    // Append the assistant's reply, then ask a follow-up that only makes
-    // sense if the prior context is present.
-    conversation.push(MessageParam::new_with_blocks(
+    println!("Response 1: {}", text_of(&response1));
+    context.push(MessageParam::new_with_blocks(
         response1.content,
         MessageRole::Assistant,
     ));
 
-    // Second turn - relies on the model remembering what was asked first.
-    conversation.push(MessageParam::user(
+    // A follow-up that only makes sense if the prior context is present.
+    context.push(MessageParam::user(
         "Why do you think I asked you this question?",
     ));
-
     let response2 = client
         .send(MessageCreateParams::new(
             1024,
-            conversation.clone(),
+            context.clone(),
             model.clone(),
         ))
         .await?;
-
-    println!("\nResponse 2:");
-    print_text(&response2);
-
-    conversation.push(MessageParam::new_with_blocks(
+    println!("Response 2: {}", text_of(&response2));
+    context.push(MessageParam::new_with_blocks(
         response2.content,
         MessageRole::Assistant,
     ));
 
-    println!("\nThe whole past conversation is included in the token window:");
-    println!("{}", serde_json::to_string_pretty(&conversation)?);
+    // the whole past conversation is included in the token window
+    println!("{}", serde_json::to_string_pretty(&context)?);
 
     Ok(())
 }
 
-/// Prints the text blocks of a response, ignoring any non-text content.
-fn print_text(message: &Message) {
-    for block in &message.content {
-        if let Some(text) = block.as_text() {
-            println!("{}", text.text);
-        }
-    }
+/// Concatenates the text blocks of a response, ignoring any non-text content.
+fn text_of(message: &Message) -> String {
+    message
+        .content
+        .iter()
+        .filter_map(|block| block.as_text().map(|text| text.text.as_str()))
+        .collect::<Vec<_>>()
+        .join("")
 }
