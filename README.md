@@ -11,13 +11,6 @@ https://xemantic.com/ai/workshops/slides/
 
 ## What do I need to start?
 
-### Integrated Development Environment (IDE) for Kotlin
-
-You need to have either [IntelliJ IDEA](https://www.jetbrains.com/idea/download/) or [Android Studio](https://developer.android.com/studio) installed on your computer. In case of the IntelliJ IDEA the open source community edition (CE) is good enough.
-
-> [!NOTE]
-> IntelliJ IDEA (and Android Studio derived from it), are Integrated Development Environments (IDE) allowing to conveniently edit and execute Kotlin code. Kotlin is the language used in all the code demonstrations in this repository.
-
 ### A GitHub account
 
 https://github.com
@@ -26,6 +19,14 @@ https://github.com
 
 > [!TIP]
 > If you've never configured GitHub access before on your computer, then [GitHub Desktop](https://github.com/apps/desktop) will be probably the easiest way to start
+
+### IDE
+
+You can use the IDE / editor of your liking (VSCode, vim, emacs). IntellJ is recommended if you are planning to work with Kotlin examples.
+
+#### IntelliJ IDEA for Kotlin
+
+You need either [IntelliJ IDEA](https://www.jetbrains.com/idea/download/) or [Android Studio](https://developer.android.com/studio) installed on your computer.
 
 ## Learning material
 
