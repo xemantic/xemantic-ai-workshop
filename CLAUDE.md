@@ -129,11 +129,11 @@ export ANTHROPIC_API_KEY="your-api-key-here"
 
 ## Dependencies
 
-- Kotlin 2.2.21 with JVM target 17
-- OPENRNDR 0.4.4 (creative coding framework)
+- Kotlin 2.3.21 with JVM target 17
+- OPENRNDR 0.4.5 (creative coding framework)
 - ORX 0.4.4 (OPENRNDR extensions)
-- Anthropic SDK Kotlin 0.19.0
-- Ktor 3.1.1 (HTTP client)
+- Anthropic SDK Kotlin 0.32.3
+- Ktor 3.5.0 (HTTP client)
 - Log4j2 for logging (configured in `application.log`)
 
 ## Educational Context
