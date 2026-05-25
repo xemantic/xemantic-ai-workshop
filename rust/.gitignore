@@ -1,0 +1,3 @@
+/target
+# Cargo.lock is kept under version control: this is an application-style
+# examples crate, so a reproducible dependency set is desirable.

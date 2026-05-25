@@ -1,0 +1,38 @@
+[package]
+name = "xemantic-ai-workshop-rust"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+# Each workshop demo is a standalone file under `examples/`, run with:
+#
+#     cargo run --example demo_010_hello_world
+#
+# This mirrors `./gradlew run -Dlaunch=Demo010HelloWorld` on the Kotlin side.
+
+[dependencies]
+# There is NO official Anthropic Rust SDK. `claudius` is a community-maintained
+# crate (https://crates.io/crates/claudius). We disable its default `binaries`
+# feature so we only pull the client, and keep `native-tls` for HTTPS.
+claudius = { version = "0.30.0", default-features = false, features = ["native-tls"] }
+
+# Async runtime. The Anthropic calls are `async fn`, so every demo runs inside
+# a `#[tokio::main]` entry point.
+tokio = { version = "1", features = ["macros", "rt-multi-thread", "io-std", "io-util"] }
+
+# `StreamExt::next` for consuming the SSE event stream in Demo 015.
+futures = "0.3"
+
+# `serde` derive + `serde_json` for tool input schemas and deserializing the
+# JSON the model passes to our tools.
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+# `schemars` derives a JSON Schema from a typed Rust struct. This is the Rust
+# analog of Kotlin's @Description data class, Python's Pydantic, and TS's Zod,
+# used in the `demo_040_tools_schemars` variant.
+schemars = "1"
+
+# Exact base-10 arithmetic for money in `demo_061`, the Rust analog of
+# Python's `Decimal` - summing revenues without binary-float drift.
+rust_decimal = "1"

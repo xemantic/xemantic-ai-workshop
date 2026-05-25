@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-This is a workshop repository for "Agentic AI & Creative Coding" that demonstrates various use cases of the Anthropic API. It's based on the OPENRNDR creative coding framework and uses Kotlin as the primary language, with additional examples in Python and TypeScript.
+This is a workshop repository for "Agentic AI & Creative Coding" that demonstrates various use cases of the Anthropic API. It's based on the OPENRNDR creative coding framework and uses Kotlin as the primary language, with additional examples in Python, TypeScript, and Rust.
 
 ## Project Structure
 
@@ -15,6 +15,7 @@ The repository is a multi-language educational project:
 - **OPENRNDR examples**: `src/main/kotlin/openrndr/` - Creative coding framework integration
 - **Python examples**: `src/main/python/` - Basic Anthropic API examples
 - **TypeScript examples**: `src/main/typescript/` - Basic Anthropic API examples
+- **Rust examples**: `rust/` - Basic Anthropic API examples using the community `claudius` crate (no official Anthropic Rust SDK exists)
 
 ### Demo Progression
 
@@ -71,6 +72,22 @@ npm install @anthropic-ai/sdk
 
 # Run example
 npx ts-node src/main/typescript/hello-world.ts
+```
+
+### Rust
+
+Each demo is an `examples/` file in the `rust/` Cargo project. There is
+no official Anthropic Rust SDK; the examples use the community `claudius` crate.
+
+```bash
+cd rust
+
+# Run a specific demo (analog of -Dlaunch=Demo010HelloWorld)
+cargo run --example demo_010_hello_world
+
+# Compile all demos / lint without running
+cargo build --examples
+cargo clippy --examples
 ```
 
 ## Architecture
